@@ -1,0 +1,50 @@
+<section class="rounded-3xl border border-slate-200 bg-white/80 p-4 text-slate-900 dark:border-white/10 dark:bg-slate-950 dark:text-slate-100 md:p-6">
+  @if (isLoading()) {
+    <div class="space-y-4">
+      <div class="h-72 animate-pulse rounded-2xl bg-slate-300/60 dark:bg-slate-800/70"></div>
+      <div class="h-8 w-2/3 animate-pulse rounded bg-slate-300/70 dark:bg-slate-800/70"></div>
+      <div class="h-5 w-1/2 animate-pulse rounded bg-slate-300/50 dark:bg-slate-800/50"></div>
+    </div>
+  } @else if (error()) {
+    <div class="rounded-2xl border border-rose-500/30 bg-rose-100/70 p-6 text-rose-700 dark:bg-rose-950/20 dark:text-rose-200">
+      {{ error() }}
+    </div>
+  } @else if (news()) {
+    <article class="space-y-6">
+      <a
+        routerLink="/"
+        class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition hover:-translate-y-0.5 dark:border-white/10 dark:bg-slate-900 dark:text-slate-200"
+      >
+        ← Ana sayfaya don
+      </a>
+
+      <div class="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10">
+        <img
+          class="h-[50vh] w-full object-cover"
+          [src]="news()!.imageUrl"
+          [alt]="news()!.title"
+          fetchpriority="high"
+          decoding="async"
+          (error)="onHeroImageError($event)"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 space-y-3 p-5 text-white md:p-8">
+          <p class="text-xs uppercase tracking-[0.2em] text-white/80">{{ news()!.categoryName }}</p>
+          <h1 class="text-[clamp(1.8rem,4vw,3rem)] font-extrabold tracking-tight">{{ news()!.title }}</h1>
+          <div class="text-sm text-white/80">
+            {{ news()!.authorName }} • {{ news()!.publishDate | date: 'dd MMM yyyy' }} • {{ news()!.viewCount }}
+            okuma
+          </div>
+        </div>
+      </div>
+
+      <p class="text-lg font-medium leading-relaxed text-slate-700 dark:text-slate-200">
+        {{ news()!.spotText }}
+      </p>
+
+      <div class="prose prose-slate max-w-none dark:prose-invert">
+        <p class="leading-8">{{ news()!.content }}</p>
+      </div>
+    </article>
+  }
+</section>

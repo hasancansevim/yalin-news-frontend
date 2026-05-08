@@ -1,0 +1,65 @@
+<header class="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-6">
+  <nav
+    class="mx-auto flex w-full max-w-7xl items-center justify-between rounded-2xl border border-slate-200/70 bg-white/75 px-4 py-3 shadow-lg shadow-slate-900/10 backdrop-blur-xl transition-colors duration-300 dark:border-slate-700/70 dark:bg-slate-900/60 dark:shadow-black/20 md:px-6"
+    aria-label="Main navigation"
+  >
+    <div class="flex items-center gap-6">
+      <a routerLink="/" class="group inline-flex items-center gap-2">
+        <span
+          class="inline-flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-sm font-bold text-white shadow-md shadow-indigo-500/30"
+        >
+          YN
+        </span>
+        <span
+          class="text-lg font-semibold tracking-tight text-slate-900 transition-colors group-hover:text-indigo-600 dark:text-slate-100 dark:group-hover:text-indigo-300"
+        >
+          YalinNews
+        </span>
+      </a>
+
+      <div class="hidden items-center gap-3 md:flex">
+        <a
+          routerLink="/"
+          class="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+        >
+          Home
+        </a>
+        <a
+          routerLink="/admin"
+          class="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+        >
+          Admin
+        </a>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      (click)="toggleTheme()"
+      class="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200/80 bg-white/90 text-slate-600 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/20 hover:text-indigo-600 dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-300 dark:hover:text-indigo-300"
+      [attr.aria-label]="isDark() ? 'Aydinlik temaya gec' : 'Karanlik temaya gec'"
+    >
+      @if (isDark()) {
+        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M12 4V2m0 20v-2m8-8h2M2 12h2m13.66 5.66 1.41 1.41M4.93 4.93l1.41 1.41m11.32 0 1.41-1.41M4.93 19.07l1.41-1.41M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      } @else {
+        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M21 14.7A8.5 8.5 0 1 1 9.3 3a7.1 7.1 0 0 0 11.7 11.7Z"
+            stroke="currentColor"
+            stroke-width="1.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      }
+    </button>
+  </nav>
+</header>

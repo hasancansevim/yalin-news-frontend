@@ -8,7 +8,7 @@ export class BreakingNewsService {
 
   toggle(title: string): void {
     this.titles.update((current) =>
-      current.includes(title) ? current.filter((item) => item !== title) : [title, ...current].slice(0, 10),
+      current.includes(title) ? [] : [title]
     );
   }
 

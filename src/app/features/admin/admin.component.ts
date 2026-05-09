@@ -32,13 +32,13 @@ export class AdminComponent {
       return s === 'published' || s === '2';
     }).length;
     const draft = total - published;
-    const breaking = this.breakingTitles().length;
+    const totalViews = items.reduce((acc, item) => acc + (item.viewCount || 0), 0);
 
     return [
       { label: 'Toplam Haber', value: String(total) },
       { label: 'Yayinda', value: String(published) },
       { label: 'Taslak', value: String(draft) },
-      { label: 'Son Dakika', value: String(breaking) },
+      { label: 'Toplam Okunma', value: String(totalViews) },
     ];
   });
 
@@ -50,7 +50,7 @@ export class AdminComponent {
 
   private loadNews(): void {
     this.listError.set('');
-    this.newsService.getNewsByDetails().subscribe((response) => {
+    this.newsService.getAllNews().subscribe((response) => {
       if (response.success) {
         this.list.set(response.data);
       } else {

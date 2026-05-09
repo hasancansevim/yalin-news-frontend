@@ -28,17 +28,12 @@ export class HomeComponent implements OnInit {
   protected readonly news = signal<NewsDetailDto[]>([]);
   protected readonly isLoading = signal<boolean>(true);
   protected readonly error = signal<string>('');
-  protected readonly selectedCategory = signal<string>('Tum Kategoriler');
+  protected readonly selectedCategory = signal<string>('Tümü');
   protected readonly searchQuery = signal<string>('');
 
-  protected readonly categories = computed(() => {
-    const unique = new Set(
-      this.news()
-        .map((item) => item.categoryName)
-        .filter(Boolean),
-    );
-    return ['Tum Kategoriler', ...Array.from(unique)];
-  });
+  protected readonly categories = signal<string[]>(['Tümü']);
+  protected readonly displayLimit = signal<number>(8);
+  protected readonly hasMore = computed(() => this.filteredNews().length > this.displayLimit() + 1);
 
   protected readonly filteredNews = computed(() => {
     const category = this.selectedCategory();
@@ -46,6 +41,7 @@ export class HomeComponent implements OnInit {
 
     return this.news().filter((item) => {
       const matchesCategory =
+        category === 'Tümü' ||
         category === 'Tum Kategoriler' ||
         item.categoryName.toLowerCase() === category.toLowerCase();
 
@@ -67,18 +63,14 @@ export class HomeComponent implements OnInit {
   });
 
   protected readonly heroNews = computed(() => this.filteredNews()[0] ?? null);
-  protected readonly gridNews = computed(() => this.filteredNews().slice(1));
+  protected readonly gridNews = computed(() => this.filteredNews().slice(1, this.displayLimit() + 1));
   protected readonly breakingNews = computed(() => {
     const curated = this.breakingNewsService
       .titles()
       .map((title) => this.news().find((item) => item.title === title))
       .filter((item): item is NewsDetailDto => !!item);
 
-    if (curated.length) {
-      return curated;
-    }
-
-    return this.news().slice(0, 5);
+    return curated;
   });
   protected readonly mostReadNews = computed(() =>
     [...this.news()].sort((a, b) => b.viewCount - a.viewCount).slice(0, 5),
@@ -102,6 +94,7 @@ export class HomeComponent implements OnInit {
 
   protected selectCategory(category: string): void {
     this.selectedCategory.set(category);
+    this.displayLimit.set(8);
     this.syncFiltersToUrl();
     this.analytics.track('category_click', { category });
   }
@@ -109,6 +102,7 @@ export class HomeComponent implements OnInit {
   protected updateSearchQuery(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.searchQuery.set(value);
+    this.displayLimit.set(8);
     this.syncFiltersToUrl();
     this.analytics.track('search', { query: value.trim() });
   }
@@ -151,25 +145,44 @@ export class HomeComponent implements OnInit {
       category: queryCategory ?? '',
     });
 
-    this.newsService.getNewsByDetails().subscribe({
+    this.newsService.getCategories().subscribe({
+      next: (cats) => {
+        const unique = new Set(cats);
+        this.categories.set(['Tümü', ...Array.from(unique)]);
+      }
+    });
+
+    this.loadNews();
+  }
+
+  private loadNews(): void {
+    this.isLoading.set(true);
+    this.error.set('');
+    
+    this.newsService.getNewsByDetails(1, 50).subscribe({
       next: (response) => {
         if (response.success) {
-          this.news.set(
-            (response.data ?? []).filter((n) => {
-              const normalizedStatus = String(n.status).trim().toLowerCase();
-              return normalizedStatus === 'published' || normalizedStatus === '2';
-            }),
-          );
+          const fetchedNews = (response.data ?? []).filter((n) => {
+            const normalizedStatus = String(n.status).trim().toLowerCase();
+            return normalizedStatus === 'published' || normalizedStatus === '2';
+          });
+          this.news.set(fetchedNews);
         } else {
-          this.error.set(response.message || 'Haberler su an yuklenemiyor.');
+          this.error.set(response.message || 'Haberler şu an yüklenemiyor.');
         }
         this.isLoading.set(false);
       },
       error: () => {
-        this.error.set('Haberler alinirken bir hata olustu.');
+        this.error.set('Haberler alınırken bir hata oluştu.');
         this.isLoading.set(false);
       },
     });
+  }
+
+  protected loadMore(): void {
+    if (this.hasMore()) {
+      this.displayLimit.update(limit => limit + 8);
+    }
   }
 
   private syncFiltersToUrl(): void {
@@ -179,7 +192,7 @@ export class HomeComponent implements OnInit {
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        category: category === 'Tum Kategoriler' ? null : category,
+        category: category === 'Tümü' ? null : category,
         q: query || null,
       },
       queryParamsHandling: 'merge',

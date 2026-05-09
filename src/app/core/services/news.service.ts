@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, of, retry, timeout, TimeoutError } from 'rxjs';
+import { Observable, catchError, map, of, retry, timeout, TimeoutError, forkJoin } from 'rxjs';
 
 import { parseHttpErrorMessages } from '../http/parse-api-error';
 import { environment } from '../../../environments/environment';
@@ -21,7 +21,7 @@ export interface ApiResponse<T> {
 export class NewsService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = environment.apiBaseUrl;
-  private readonly newsUrl = `${this.apiBaseUrl}/api/News/getnewsbydetails?page=1&pageSize=10`;
+  private readonly getAllUrl = `${this.apiBaseUrl}/api/news/getall`;
   private readonly addUrl = `${this.apiBaseUrl}/api/News/add`;
   private readonly updateUrl = `${this.apiBaseUrl}/api/News/update`;
   private readonly deleteUrl = `${this.apiBaseUrl}/api/News/delete`;
@@ -32,8 +32,9 @@ export class NewsService {
   private readonly authorsFallbackUrl = `${this.apiBaseUrl}/api/Authors/getall`;
   private readonly authorsFallback2Url = `${this.apiBaseUrl}/api/Author/getall`;
 
-  getNewsByDetails(): Observable<ApiResponse<NewsDetailDto[]>> {
-    return this.http.get<ApiResponse<NewsDetailDto[]>>(this.newsUrl).pipe(
+  getNewsByDetails(page: number = 1, pageSize: number = 10): Observable<ApiResponse<NewsDetailDto[]>> {
+    const url = `${this.apiBaseUrl}/api/News/getnewsbydetails?page=${page}&pageSize=${pageSize}`;
+    return this.http.get<ApiResponse<NewsDetailDto[]>>(url).pipe(
       timeout(8000),
       retry(1),
       map((response) => this.withNormalizedNewsIds(response)),
@@ -44,6 +45,54 @@ export class NewsService {
           data: [],
         }),
       ),
+    );
+  }
+
+  getAllNews(): Observable<ApiResponse<NewsDetailDto[]>> {
+    const cacheBuster = `?_t=${new Date().getTime()}`;
+    const url = `${this.getAllUrl}${cacheBuster}`;
+    const news$ = this.http.get<ApiResponse<NewsDetailDto[]>>(url).pipe(
+      timeout(8000),
+      retry(1),
+      map((response) => this.withNormalizedNewsIds(response)),
+      catchError(() =>
+        of({
+          success: false,
+          message: 'Haber servisine su an ulasilamiyor.',
+          data: [],
+        } as ApiResponse<NewsDetailDto[]>),
+      ),
+    );
+
+    const categories$ = this.getCategoryOptions();
+    const authors$ = this.getAuthorOptions();
+
+    return forkJoin({
+      newsResponse: news$,
+      categories: categories$,
+      authors: authors$
+    }).pipe(
+      map(({ newsResponse, categories, authors }) => {
+        if (!newsResponse.success || !newsResponse.data) return newsResponse;
+        
+        newsResponse.data = newsResponse.data.map(item => {
+          let statusStr = item.status;
+          if (item.status === 1 || String(item.status) === '1') statusStr = 'Draft';
+          if (item.status === 2 || String(item.status) === '2') statusStr = 'Published';
+
+          const cat = categories.find(c => c.id === item.categoryId);
+          const auth = authors.find(a => a.id === item.authorId);
+
+          return {
+            ...item,
+            status: statusStr,
+            categoryName: cat ? cat.name : (item.categoryName || 'Bilinmeyen'),
+            authorName: auth ? auth.name : (item.authorName || 'Bilinmeyen')
+          };
+        });
+
+        return newsResponse;
+      })
     );
   }
 

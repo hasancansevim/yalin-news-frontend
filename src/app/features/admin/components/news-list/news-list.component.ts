@@ -12,6 +12,7 @@ import { NewsDetailDto } from '../../../../shared/models/news-detail-dto';
 export class NewsListComponent {
   @Input({ required: true }) newsList: NewsDetailDto[] = [];
   @Input() selectedTitle: string | null = null;
+  @Input() breakingTitles: string[] = [];
 
   @Output() editNews = new EventEmitter<NewsDetailDto>();
   @Output() deleteNews = new EventEmitter<NewsDetailDto>();
@@ -24,5 +25,9 @@ export class NewsListComponent {
   protected isPublishedStatus(item: NewsDetailDto): boolean {
     const s = String(item.status).trim().toLowerCase();
     return s === 'published' || s === '2';
+  }
+
+  protected isBreaking(item: NewsDetailDto): boolean {
+    return this.breakingTitles.includes(item.title);
   }
 }

@@ -4,6 +4,15 @@
     <p class="text-sm text-slate-600 dark:text-slate-300">Icerik yonetimi ve metrikler.</p>
   </div>
 
+  @if (listError()) {
+    <p
+      class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-200"
+      role="alert"
+    >
+      {{ listError() }}
+    </p>
+  }
+
   <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
     @for (card of statCards(); track card.label) {
       <article
@@ -27,7 +36,7 @@
 
       <app-admin-news-form
         [editItem]="activeEdit()"
-        (save)="saveNews($event)"
+        (saved)="afterSave()"
         (cancel)="clearEdit()"
       ></app-admin-news-form>
     </div>

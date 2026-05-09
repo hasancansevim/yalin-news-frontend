@@ -16,4 +16,13 @@ export class NewsListComponent {
   @Output() editNews = new EventEmitter<NewsDetailDto>();
   @Output() deleteNews = new EventEmitter<NewsDetailDto>();
   @Output() toggleBreaking = new EventEmitter<NewsDetailDto>();
+
+  protected trackNews(item: NewsDetailDto): string | number {
+    return item.id != null && item.id > 0 ? item.id : `${item.title}\u0000${item.publishDate}`;
+  }
+
+  protected isPublishedStatus(item: NewsDetailDto): boolean {
+    const s = String(item.status).trim().toLowerCase();
+    return s === 'published' || s === '2';
+  }
 }

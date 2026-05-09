@@ -1,4 +1,18 @@
 <form class="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900" [formGroup]="form" (ngSubmit)="submit()">
+  @if (submitErrorLines().length) {
+    <div
+      class="rounded-lg border border-rose-300 bg-rose-50 px-3 py-3 text-rose-800 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-100"
+      role="alert"
+    >
+      <p class="text-sm font-semibold">Islem tamamlanamadi</p>
+      <ul class="mt-2 list-disc space-y-1.5 pl-5 text-sm">
+        @for (line of submitErrorLines(); track $index) {
+          <li>{{ line }}</li>
+        }
+      </ul>
+    </div>
+  }
+
   <div class="grid gap-4 md:grid-cols-2">
     <label class="space-y-1 text-sm">
       <span class="font-medium">Baslik</span>
@@ -6,11 +20,29 @@
     </label>
     <label class="space-y-1 text-sm">
       <span class="font-medium">Kategori</span>
-      <input class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" formControlName="categoryName" />
+      <select class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" formControlName="categoryId">
+        @if (isLookupsLoading()) {
+          <option [ngValue]="0">Kategoriler yukleniyor...</option>
+        } @else {
+          <option [ngValue]="0">Kategori secin</option>
+          @for (c of categoryOptions(); track c.id) {
+            <option [ngValue]="c.id">{{ c.name }}</option>
+          }
+        }
+      </select>
     </label>
     <label class="space-y-1 text-sm">
       <span class="font-medium">Yazar</span>
-      <input class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" formControlName="authorName" />
+      <select class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" formControlName="authorId">
+        @if (isLookupsLoading()) {
+          <option [ngValue]="0">Yazarlar yukleniyor...</option>
+        } @else {
+          <option [ngValue]="0">Yazar secin</option>
+          @for (a of authorOptions(); track a.id) {
+            <option [ngValue]="a.id">{{ a.name }}</option>
+          }
+        }
+      </select>
     </label>
     <label class="space-y-1 text-sm">
       <span class="font-medium">Durum</span>
@@ -46,9 +78,18 @@
     </button>
     <button
       type="submit"
+      [disabled]="
+        isSaving() || isLookupsLoading() || !categoryOptions().length || !authorOptions().length
+      "
+      [class.cursor-not-allowed]="
+        isSaving() || isLookupsLoading() || !categoryOptions().length || !authorOptions().length
+      "
+      [class.opacity-70]="
+        isSaving() || isLookupsLoading() || !categoryOptions().length || !authorOptions().length
+      "
       class="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
     >
-      Kaydet
+      {{ isSaving() ? 'Kaydediliyor...' : 'Kaydet' }}
     </button>
   </div>
 </form>

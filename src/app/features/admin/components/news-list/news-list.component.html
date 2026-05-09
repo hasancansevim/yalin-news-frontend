@@ -6,7 +6,7 @@
     <span class="text-right">Aksiyon</span>
   </div>
 
-  @for (item of newsList; track item.title + item.publishDate) {
+  @for (item of newsList; track trackNews(item)) {
     <div
       class="grid grid-cols-[2fr_1fr_120px_180px] items-center gap-2 border-t border-slate-200 px-4 py-3 text-sm dark:border-slate-800"
       [class.bg-indigo-50]="selectedTitle === item.title"
@@ -19,10 +19,10 @@
       <span>{{ item.categoryName }}</span>
       <span
         class="w-fit rounded-full px-2 py-1 text-xs font-semibold"
-        [class.bg-emerald-100]="item.status === 'Published'"
-        [class.text-emerald-700]="item.status === 'Published'"
-        [class.bg-amber-100]="item.status !== 'Published'"
-        [class.text-amber-700]="item.status !== 'Published'"
+        [class.bg-emerald-100]="isPublishedStatus(item)"
+        [class.text-emerald-700]="isPublishedStatus(item)"
+        [class.bg-amber-100]="!isPublishedStatus(item)"
+        [class.text-amber-700]="!isPublishedStatus(item)"
       >
         {{ item.status }}
       </span>

@@ -1,0 +1,38 @@
+<section class="mx-auto mt-16 w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+  <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Admin Giris</h1>
+  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Panel erisimi icin hesap bilgilerinizle giris yapin.</p>
+
+  <form class="mt-6 space-y-4" [formGroup]="form" (ngSubmit)="submit()">
+    <label class="block space-y-1 text-sm">
+      <span class="font-medium text-slate-700 dark:text-slate-200">E-posta</span>
+      <input
+        type="email"
+        formControlName="email"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950"
+        placeholder="admin@example.com"
+      />
+    </label>
+
+    <label class="block space-y-1 text-sm">
+      <span class="font-medium text-slate-700 dark:text-slate-200">Sifre</span>
+      <input
+        type="password"
+        formControlName="password"
+        class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950"
+        placeholder="******"
+      />
+    </label>
+
+    @if (errorMessage()) {
+      <p class="text-sm text-rose-600 dark:text-rose-400">{{ errorMessage() }}</p>
+    }
+
+    <button
+      type="submit"
+      class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+      [disabled]="isSubmitting()"
+    >
+      {{ isSubmitting() ? 'Giris yapiliyor...' : 'Giris Yap' }}
+    </button>
+  </form>
+</section>

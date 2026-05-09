@@ -32,7 +32,11 @@ export class HomeComponent implements OnInit {
   protected readonly searchQuery = signal<string>('');
 
   protected readonly categories = computed(() => {
-    const unique = new Set(this.news().map((item) => item.categoryName).filter(Boolean));
+    const unique = new Set(
+      this.news()
+        .map((item) => item.categoryName)
+        .filter(Boolean),
+    );
     return ['Tum Kategoriler', ...Array.from(unique)];
   });
 
@@ -42,7 +46,8 @@ export class HomeComponent implements OnInit {
 
     return this.news().filter((item) => {
       const matchesCategory =
-        category === 'Tum Kategoriler' || item.categoryName.toLowerCase() === category.toLowerCase();
+        category === 'Tum Kategoriler' ||
+        item.categoryName.toLowerCase() === category.toLowerCase();
 
       if (!matchesCategory) {
         return false;
@@ -76,9 +81,7 @@ export class HomeComponent implements OnInit {
     return this.news().slice(0, 5);
   });
   protected readonly mostReadNews = computed(() =>
-    [...this.news()]
-      .sort((a, b) => b.viewCount - a.viewCount)
-      .slice(0, 5),
+    [...this.news()].sort((a, b) => b.viewCount - a.viewCount).slice(0, 5),
   );
 
   protected categoryTone(categoryName: string): string {
@@ -151,7 +154,12 @@ export class HomeComponent implements OnInit {
     this.newsService.getNewsByDetails().subscribe({
       next: (response) => {
         if (response.success) {
-          this.news.set(response.data ?? []);
+          this.news.set(
+            (response.data ?? []).filter((n) => {
+              const normalizedStatus = String(n.status).trim().toLowerCase();
+              return normalizedStatus === 'published' || normalizedStatus === '2';
+            }),
+          );
         } else {
           this.error.set(response.message || 'Haberler su an yuklenemiyor.');
         }

@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://api.yalinnews.com',
+  apiUrl: 'https://senin-backend-url.com/api',
+  apiBaseUrl: 'https://senin-backend-url.com/api',
 };

@@ -3,6 +3,30 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Default: Editorial Dark Luxury */
+  --color-bg-main: #0A0A0B;
+  --color-surface: #111113;
+  --color-border: #1E1E22;
+  --color-accent-main: #C8A96E;
+  --color-accent-secondary: #4A7FA5;
+  --color-text-primary: #F0EDE8;
+  --color-text-secondary: #8A8680;
+
+  --font-display: "Playfair Display", serif;
+  --font-ui: "DM Mono", monospace;
+  --font-body: "Source Serif 4", serif;
+}
+
+[data-theme="light"] {
+  --color-bg-main: #FAFAF8;
+  --color-surface: #F2F0EB;
+  --color-border: #E0DDD8;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #5A5650;
+  --color-accent-main: #8B6914;
+}
+
 *,
 *::before,
 *::after {
@@ -13,16 +37,38 @@ html,
 body {
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 
-body {
+body.editorial-theme {
   min-height: 100vh;
-  font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-  color: #0f172a;
+  font-family: var(--font-body);
+  background-color: var(--color-bg-main);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.dark body {
-  background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
-  color: #e2e8f0;
+::selection {
+  background-color: var(--color-accent-main);
+  color: #0A0A0B;
 }
+
+/* Category Colors */
+.cat-bg-1 { background-color: #1A1710; color: #C8A96E; }
+.cat-bg-2 { background-color: #0F1A14; color: #4CAF82; }
+.cat-bg-3 { background-color: #0F1318; color: #4A7FA5; }
+.cat-bg-4 { background-color: #150F1A; color: #9B6ED4; }
+.cat-bg-5 { background-color: #1A0F0F; color: #E05C5C; }
+.cat-bg-6 { background-color: #0F1618; color: #4ABFBF; }
+
+.cat-text-1 { color: #C8A96E; }
+.cat-text-2 { color: #4CAF82; }
+.cat-text-3 { color: #4A7FA5; }
+.cat-text-4 { color: #9B6ED4; }
+.cat-text-5 { color: #E05C5C; }
+.cat-text-6 { color: #4ABFBF; }
+
+/* Utilities */
+.font-display { font-family: var(--font-display); }
+.font-ui { font-family: var(--font-ui); }
+.font-body { font-family: var(--font-body); }

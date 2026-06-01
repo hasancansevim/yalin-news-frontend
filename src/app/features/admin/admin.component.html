@@ -1,47 +1,141 @@
-<section class="space-y-6 rounded-3xl border border-slate-200 bg-white/80 p-4 text-slate-900 dark:border-white/10 dark:bg-slate-950 dark:text-slate-100 md:p-6">
-  <div class="space-y-2">
-    <h1 class="text-3xl font-extrabold tracking-tight">Admin Panel</h1>
-    <p class="text-sm text-slate-600 dark:text-slate-300">Icerik yonetimi ve metrikler.</p>
-  </div>
+<div class="min-h-screen bg-surface flex text-text-primary relative">
 
-  @if (listError()) {
-    <p
-      class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-200"
-      role="alert"
-    >
-      {{ listError() }}
-    </p>
+  <!-- Toast Notification Overlay -->
+  @if (notificationService.notification()) {
+    <div class="fixed bottom-8 right-8 z-50 flex items-center gap-4 px-6 py-4 shadow-lg border animate-in slide-in-from-bottom-5"
+         [ngClass]="{
+           'border-[#4CAF82] bg-[#4CAF82]/10 text-[#4CAF82]': notificationService.notification()?.type === 'success',
+           'border-[#E05C5C] bg-[#E05C5C]/10 text-[#E05C5C]': notificationService.notification()?.type === 'error',
+           'border-[#C8A96E] bg-[#C8A96E]/10 text-[#C8A96E]': notificationService.notification()?.type === 'warning'
+         }">
+      <p class="font-ui text-[12px] uppercase tracking-widest font-bold">{{ notificationService.notification()?.message }}</p>
+      <button class="opacity-50 hover:opacity-100 transition-opacity" (click)="notificationService.clear()">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+    </div>
   }
-
-  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-    @for (card of statCards(); track card.label) {
-      <article
-        class="rounded-2xl border border-slate-200/60 bg-white/80 p-5 shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/10 dark:border-slate-800/80 dark:bg-slate-900/80"
-      >
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{{ card.label }}</p>
-        <p class="mt-3 text-3xl font-extrabold text-indigo-950 dark:text-indigo-100">{{ card.value }}</p>
-      </article>
-    }
-  </div>
-
-  <div class="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
-    <div class="space-y-4">
-      <app-admin-news-list
-        [newsList]="list()"
-        [selectedTitle]="activeEdit()?.title ?? null"
-        [breakingTitles]="breakingTitles()"
-        (editNews)="startEdit($event)"
-        (deleteNews)="removeNews($event)"
-        (toggleBreaking)="toggleBreaking($event)"
-      ></app-admin-news-list>
-
-      <app-admin-news-form
-        [editItem]="activeEdit()"
-        (saved)="afterSave()"
-        (cancel)="clearEdit()"
-      ></app-admin-news-form>
+  
+  <!-- Sidebar -->
+  <aside class="w-64 shrink-0 bg-bg-main border-r border-border sticky top-0 h-screen flex flex-col pt-8">
+    <div class="px-8 mb-12">
+      <span class="font-display text-xl font-black tracking-widest text-accent-main">YALIN ADMIN</span>
     </div>
 
-    <app-admin-analytics [newsList]="list()"></app-admin-analytics>
-  </div>
-</section>
+    <nav class="flex-1 flex flex-col gap-2">
+      <button 
+        type="button"
+        (click)="setTab('haberler')"
+        class="relative flex items-center gap-3 px-8 py-3 font-ui text-[11px] uppercase tracking-widest transition-colors w-full text-left"
+        [class]="activeTab() === 'haberler' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
+      >
+        @if (activeTab() === 'haberler') {
+          <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-accent-main"></div>
+        }
+        <svg class="h-4 w-4" [class.text-accent-main]="activeTab() === 'haberler'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
+        Haberler
+      </button>
+
+      <button 
+        type="button"
+        (click)="setTab('kategoriler')"
+        class="relative flex items-center gap-3 px-8 py-3 font-ui text-[11px] uppercase tracking-widest transition-colors w-full text-left"
+        [class]="activeTab() === 'kategoriler' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
+      >
+        @if (activeTab() === 'kategoriler') {
+          <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-accent-main"></div>
+        }
+        <svg class="h-4 w-4" [class.text-accent-main]="activeTab() === 'kategoriler'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
+        Kategoriler
+      </button>
+
+      <button 
+        type="button"
+        (click)="setTab('yazarlar')"
+        class="relative flex items-center gap-3 px-8 py-3 font-ui text-[11px] uppercase tracking-widest transition-colors w-full text-left"
+        [class]="activeTab() === 'yazarlar' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
+      >
+        @if (activeTab() === 'yazarlar') {
+          <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-accent-main"></div>
+        }
+        <svg class="h-4 w-4" [class.text-accent-main]="activeTab() === 'yazarlar'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+        Yazarlar
+      </button>
+
+      <button 
+        type="button"
+        (click)="setTab('istatistikler')"
+        class="relative flex items-center gap-3 px-8 py-3 font-ui text-[11px] uppercase tracking-widest transition-colors w-full text-left"
+        [class]="activeTab() === 'istatistikler' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
+      >
+        @if (activeTab() === 'istatistikler') {
+          <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-accent-main"></div>
+        }
+        <svg class="h-4 w-4" [class.text-accent-main]="activeTab() === 'istatistikler'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+        İstatistikler
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 md:p-12 overflow-y-auto h-screen bg-bg-main">
+    
+    @if (listError()) {
+      <div class="mb-8 border border-border p-4 text-center font-ui text-sm text-[#E05C5C]">
+        {{ listError() }}
+      </div>
+    }
+
+    <!-- Stat Cards -->
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-12">
+      @for (card of statCards(); track card.label) {
+        <article class="border border-border p-6 transition-colors hover:border-accent-main/30">
+          <div class="flex flex-col gap-4">
+            <span class="font-ui text-[10px] uppercase tracking-widest text-text-secondary">{{ card.label }}</span>
+            <div class="flex items-baseline justify-between">
+              <span class="font-ui text-[36px] leading-none text-text-primary">{{ card.value }}</span>
+              <!-- Mini trend line mock -->
+              <svg class="w-12 h-6 text-accent-main/50" viewBox="0 0 48 24" fill="none" preserveAspectRatio="none">
+                <path d="M0 24 L8 16 L16 20 L24 8 L32 12 L48 0" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+              </svg>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <div class="w-full max-w-5xl">
+      @if (activeTab() === 'haberler') {
+        <div class="space-y-12">
+          <div class="border border-border p-8">
+            <div class="mb-8 flex items-center justify-between border-b border-border pb-4">
+              <h2 class="font-display text-xl font-bold text-text-primary">İçerik Yönetimi</h2>
+            </div>
+            <app-admin-news-list
+              [newsList]="list()"
+              [selectedTitle]="activeEdit()?.title ?? null"
+              [breakingTitles]="breakingTitles()"
+              (editNews)="startEdit($event)"
+              (deleteNews)="removeNews($event)"
+              (toggleBreaking)="toggleBreaking($event)"
+            ></app-admin-news-list>
+          </div>
+
+          <app-admin-news-form
+            [editItem]="activeEdit()"
+            (saved)="afterSave()"
+            (cancel)="clearEdit()"
+          ></app-admin-news-form>
+        </div>
+      } @else if (activeTab() === 'kategoriler') {
+        <app-admin-category-management></app-admin-category-management>
+      } @else if (activeTab() === 'yazarlar') {
+        <app-admin-author-management></app-admin-author-management>
+      } @else if (activeTab() === 'istatistikler') {
+        <div class="border border-border p-16 text-center">
+          <h2 class="font-display text-2xl font-bold text-text-primary mb-2">Detaylı İstatistikler</h2>
+          <p class="font-body text-text-secondary">Bu modül yakında aktif edilecektir.</p>
+        </div>
+      }
+    </div>
+  </main>
+</div>

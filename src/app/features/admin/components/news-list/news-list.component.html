@@ -1,84 +1,71 @@
-<div class="space-y-4">
+<div class="space-y-3">
   @for (item of newsList; track trackNews(item)) {
     <div
-      class="group flex flex-col md:flex-row items-start md:items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:border-indigo-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-indigo-500/50"
-      [class.ring-2]="selectedTitle === item.title"
-      [class.ring-indigo-500]="selectedTitle === item.title"
+      class="group flex flex-col md:flex-row items-center justify-between gap-6 border-b border-border py-4 transition-colors hover:bg-surface/50 px-4 -mx-4"
+      [class.bg-surface]="selectedTitle === item.title"
     >
-      <div class="flex-1 space-y-2">
-        <h3 class="line-clamp-1 text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-          {{ item.title }}
-        </h3>
-        <div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
-          <span class="flex items-center gap-1.5 font-medium">
-            <svg class="h-4 w-4 text-indigo-500 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-            {{ item.authorName }}
-          </span>
-          <span class="h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-700"></span>
-          <span class="flex items-center gap-1.5 font-medium">
-            <svg class="h-4 w-4 text-emerald-500 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
-            {{ item.categoryName }}
-          </span>
+      <div class="flex items-center gap-4 flex-1 min-w-0">
+        <!-- Thumbnail -->
+        <div class="h-16 w-24 shrink-0 bg-surface overflow-hidden border border-border">
+          <img [src]="item.imageUrl" alt="" class="h-full w-full object-cover grayscale-[50%] transition-all group-hover:grayscale-0" />
+        </div>
+        
+        <!-- Title & Spot -->
+        <div class="flex-1 min-w-0">
+          <h3 class="truncate font-display text-[16px] font-bold text-text-primary transition-colors group-hover:text-accent-main">
+            {{ item.title }}
+          </h3>
+          <p class="truncate font-body text-[13px] text-text-secondary mt-1">
+            {{ item.spotText }}
+          </p>
         </div>
       </div>
 
-      <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
-        <span
-          class="flex items-center justify-center rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-widest shadow-sm"
-          [class.bg-emerald-100]="isPublishedStatus(item)"
-          [class.text-emerald-700]="isPublishedStatus(item)"
-          [class.dark:bg-emerald-500/10]="isPublishedStatus(item)"
-          [class.dark:text-emerald-400]="isPublishedStatus(item)"
-          [class.bg-amber-100]="!isPublishedStatus(item)"
-          [class.text-amber-700]="!isPublishedStatus(item)"
-          [class.dark:bg-amber-500/10]="!isPublishedStatus(item)"
-          [class.dark:text-amber-400]="!isPublishedStatus(item)"
-        >
-          <span class="mr-2 h-2 w-2 rounded-full animate-pulse" [class.bg-emerald-500]="isPublishedStatus(item)" [class.bg-amber-500]="!isPublishedStatus(item)"></span>
-          {{ item.status }}
-        </span>
+      <!-- Middle: Category & Author -->
+      <div class="flex items-center gap-6 w-48 shrink-0 font-ui text-[11px] uppercase tracking-wider text-text-secondary">
+        <span class="w-20 truncate text-accent-main">{{ item.categoryName }}</span>
+        <span class="w-20 truncate">{{ item.authorName }}</span>
+      </div>
+
+      <!-- Right: Status, ViewCount, Actions -->
+      <div class="flex items-center gap-6 shrink-0">
+        <div class="flex flex-col items-end gap-1 font-ui text-[10px] uppercase tracking-widest">
+          <span
+            class="px-2 py-0.5 border"
+            [class.border-[#4CAF82]]="isPublishedStatus(item)"
+            [class.text-[#4CAF82]]="isPublishedStatus(item)"
+            [class.border-[#C8A96E]]="!isPublishedStatus(item)"
+            [class.text-[#C8A96E]]="!isPublishedStatus(item)"
+          >
+            {{ item.status }}
+          </span>
+          <span class="text-text-secondary">{{ item.viewCount }} okuma</span>
+        </div>
 
         <div class="flex items-center gap-2">
           <button
             type="button"
-            class="group/btn relative flex h-10 w-10 items-center justify-center rounded-xl border shadow-sm transition-all"
-            [ngClass]="{
-              'border-rose-500 bg-rose-500 text-white shadow-rose-500/20 hover:bg-rose-600': isBreaking(item),
-              'border-slate-200 bg-white text-slate-400 hover:border-slate-300 hover:text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600 dark:hover:text-slate-300': !isBreaking(item)
-            }"
-            (click)="toggleBreaking.emit(item)"
-            title="Son Dakika Yap/Kaldır"
-          >
-            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd" /></svg>
-          </button>
-          
-          <button
-            type="button"
-            class="flex h-10 items-center justify-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 text-sm font-semibold text-indigo-600 shadow-sm transition hover:bg-indigo-600 hover:text-white dark:border-indigo-500/30 dark:bg-indigo-500/10 dark:text-indigo-400 dark:hover:bg-indigo-600 dark:hover:text-white"
+            class="h-8 px-4 font-ui text-[11px] uppercase tracking-widest transition-all border border-accent-main text-accent-main hover:bg-accent-main hover:text-bg-main"
             (click)="editNews.emit(item)"
           >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
             Düzenle
           </button>
           
           <button
             type="button"
-            class="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-200 bg-rose-50 text-rose-600 shadow-sm transition hover:bg-rose-600 hover:text-white dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400 dark:hover:bg-rose-600 dark:hover:text-white"
+            class="h-8 w-8 flex items-center justify-center border border-border text-text-secondary transition-all hover:border-[#E05C5C] hover:text-[#E05C5C]"
             (click)="deleteNews.emit(item)"
             title="Sil"
           >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
           </button>
         </div>
       </div>
     </div>
   } @empty {
-    <div class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 p-16 text-center dark:border-slate-800">
-      <div class="rounded-full bg-slate-100 p-4 dark:bg-slate-800">
-        <svg class="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
-      </div>
-      <h3 class="mt-5 text-base font-bold text-slate-900 dark:text-slate-100">Haber Bulunamadı</h3>
-      <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Henüz hiç haber eklenmemiş veya kriterlere uyan haber yok.</p>
+    <div class="flex flex-col items-center justify-center border border-border p-16 text-center">
+      <h3 class="font-display text-lg font-bold text-text-primary">Kayıt Bulunamadı</h3>
+      <p class="mt-2 font-body text-sm text-text-secondary">Henüz hiç haber eklenmemiş.</p>
     </div>
   }
 </div>

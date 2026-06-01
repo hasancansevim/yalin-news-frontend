@@ -1,50 +1,88 @@
-<section class="rounded-3xl border border-slate-200 bg-white/80 p-4 text-slate-900 dark:border-white/10 dark:bg-slate-950 dark:text-slate-100 md:p-6">
+<article class="min-h-screen text-text-primary pb-20">
   @if (isLoading()) {
-    <div class="space-y-4">
-      <div class="h-72 animate-pulse rounded-2xl bg-slate-300/60 dark:bg-slate-800/70"></div>
-      <div class="h-8 w-2/3 animate-pulse rounded bg-slate-300/70 dark:bg-slate-800/70"></div>
-      <div class="h-5 w-1/2 animate-pulse rounded bg-slate-300/50 dark:bg-slate-800/50"></div>
+    <div class="mx-auto max-w-[720px] px-4 pt-12">
+      <div class="h-4 w-1/3 animate-pulse bg-surface mb-8"></div>
+      <div class="h-[480px] animate-pulse bg-surface w-full mb-10"></div>
+      <div class="h-10 w-3/4 animate-pulse bg-surface mb-6"></div>
+      <div class="h-6 w-full animate-pulse bg-surface mb-4"></div>
+      <div class="h-6 w-5/6 animate-pulse bg-surface"></div>
     </div>
   } @else if (error()) {
-    <div class="rounded-2xl border border-rose-500/30 bg-rose-100/70 p-6 text-rose-700 dark:bg-rose-950/20 dark:text-rose-200">
+    <div class="mx-auto max-w-[720px] mt-12 border border-border p-8 text-center text-accent-secondary">
       {{ error() }}
     </div>
   } @else if (news()) {
-    <article class="space-y-6">
-      <a
-        routerLink="/"
-        class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition hover:-translate-y-0.5 dark:border-white/10 dark:bg-slate-900 dark:text-slate-200"
-      >
-        ← Ana sayfaya don
-      </a>
+    <div class="mx-auto max-w-[720px] px-4 pt-12 md:pt-16">
+      
+      <!-- Breadcrumb -->
+      <nav class="mb-8 font-ui text-[11px] uppercase tracking-widest text-text-secondary flex flex-wrap items-center gap-2">
+        <a routerLink="/" class="hover:text-accent-main transition-colors">Ana Sayfa</a>
+        <span>/</span>
+        <span class="text-text-primary">{{ news()!.categoryName }}</span>
+        <span>/</span>
+        <span class="truncate max-w-[200px]">{{ news()!.title }}</span>
+      </nav>
 
-      <div class="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-white/10">
+      <!-- Header Info -->
+      <header class="mb-10">
+        <div class="flex items-center gap-4 mb-6 font-ui text-[11px] uppercase tracking-wider">
+          <span class="text-accent-main font-medium">{{ news()!.categoryName }}</span>
+          <span class="text-text-secondary">{{ news()!.publishDate | date: 'dd MMM yyyy' }}</span>
+        </div>
+
+        <h1 class="font-display text-[2.5rem] md:text-[42px] leading-[1.2] font-bold text-text-primary mb-6">
+          {{ news()!.title }}
+        </h1>
+
+        <p class="font-body text-[20px] leading-relaxed italic text-text-secondary mb-8">
+          {{ news()!.spotText }}
+        </p>
+
+        <!-- Author -->
+        <div class="flex items-center gap-4 py-6 border-y border-border">
+          <div class="h-10 w-10 shrink-0 rounded-full bg-surface flex items-center justify-center font-ui text-lg text-accent-main border border-border">
+            {{ news()!.authorName.charAt(0) }}
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="font-ui text-[13px] uppercase tracking-wider text-text-primary">{{ news()!.authorName }}</span>
+              <span class="px-2 py-0.5 rounded-full border border-accent-main text-accent-main font-ui text-[9px] uppercase tracking-widest">Yalin AI</span>
+            </div>
+            <span class="font-ui text-[11px] text-text-secondary mt-1">Yapay Zeka Destekli Editör</span>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- Image -->
+    <div class="w-full max-w-[1000px] mx-auto px-4 mb-12">
+      <div class="w-full h-[480px] bg-surface relative">
         <img
-          class="h-[50vh] w-full object-cover"
+          class="w-full h-full object-cover grayscale-[20%] transition duration-700 hover:grayscale-0"
           [src]="news()!.imageUrl"
           [alt]="news()!.title"
           fetchpriority="high"
-          decoding="async"
           (error)="onHeroImageError($event)"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-        <div class="absolute inset-x-0 bottom-0 space-y-3 p-5 text-white md:p-8">
-          <p class="text-xs uppercase tracking-[0.2em] text-white/80">{{ news()!.categoryName }}</p>
-          <h1 class="text-[clamp(1.8rem,4vw,3rem)] font-extrabold tracking-tight">{{ news()!.title }}</h1>
-          <div class="text-sm text-white/80">
-            {{ news()!.authorName }} • {{ news()!.publishDate | date: 'dd MMM yyyy' }} • {{ news()!.viewCount }}
-            okuma
-          </div>
+        <div class="absolute bottom-3 right-3 bg-bg-main/80 backdrop-blur px-2 py-1 font-ui text-[10px] text-text-secondary border border-border">
+          YalınNews Medya
         </div>
       </div>
+    </div>
 
-      <p class="text-lg font-medium leading-relaxed text-slate-700 dark:text-slate-200">
-        {{ news()!.spotText }}
-      </p>
-
-      <div class="prose prose-slate max-w-none whitespace-pre-line dark:prose-invert">
-        <p class="leading-8">{{ news()!.content }}</p>
+    <!-- Content -->
+    <div class="mx-auto max-w-[720px] px-4">
+      <div class="prose prose-invert prose-editorial max-w-none">
+        <p class="font-body text-[18px] leading-[1.8] text-text-primary whitespace-pre-line first-letter:float-left first-letter:font-display first-letter:text-6xl first-letter:font-bold first-letter:text-accent-main first-letter:mr-3 first-letter:leading-[0.8] first-letter:pt-2">
+          {{ news()!.content }}
+        </p>
       </div>
-    </article>
+
+      <div class="mt-16 pt-8 border-t border-border flex justify-center">
+        <p class="font-body text-[15px] italic text-text-secondary text-center max-w-[400px]">
+          Bu içerik Yalin AI tarafından objektif gazetecilik ilkelerine bağlı kalınarak özetlenmiştir.
+        </p>
+      </div>
+    </div>
   }
-</section>
+</article>

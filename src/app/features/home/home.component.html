@@ -1,198 +1,122 @@
-<section class="min-h-screen space-y-10 rounded-3xl bg-slate-50/80 p-3 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+<section class="min-h-screen text-text-primary">
   @if (isLoading()) {
-    <div
-      class="overflow-hidden rounded-3xl border border-slate-200 bg-white/80 p-4 dark:border-white/10 dark:bg-black/60 md:p-6"
-      aria-label="Haberler yukleniyor"
-    >
-      <div class="h-[56vh] animate-pulse rounded-2xl bg-slate-300/60 dark:bg-slate-800/70"></div>
-    </div>
-
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      @for (item of [1, 2, 3, 4, 5, 6]; track item) {
-        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white/70 p-4 dark:border-white/10 dark:bg-slate-900/70">
-          <div class="h-44 animate-pulse rounded-xl bg-slate-300/60 dark:bg-slate-800/70"></div>
-          <div class="mt-4 space-y-3">
-            <div class="h-4 w-2/3 animate-pulse rounded bg-slate-300/70 dark:bg-slate-800/70"></div>
-            <div class="h-4 w-5/6 animate-pulse rounded bg-slate-300/60 dark:bg-slate-800/60"></div>
-            <div class="h-3 w-1/3 animate-pulse rounded bg-slate-300/50 dark:bg-slate-800/50"></div>
-          </div>
+    <div class="h-[75vh] w-full animate-pulse bg-surface"></div>
+    <div class="mx-auto max-w-7xl px-4 md:px-6 py-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      @for (item of [1, 2, 3]; track item) {
+        <div class="space-y-4">
+          <div class="aspect-video w-full animate-pulse bg-surface"></div>
+          <div class="h-4 w-2/3 animate-pulse bg-surface"></div>
+          <div class="h-6 w-full animate-pulse bg-surface"></div>
         </div>
       }
     </div>
   } @else if (error()) {
-    <div
-      class="rounded-3xl border border-rose-500/30 bg-rose-100/70 p-10 text-center text-rose-700 dark:bg-rose-950/20 dark:text-rose-200"
-    >
+    <div class="p-10 text-center text-accent-secondary border border-border mt-10 mx-4">
       {{ error() }}
     </div>
   } @else {
-    @if (breakingNews().length) {
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-900 via-red-800 to-red-950 px-5 py-4 text-white shadow-lg shadow-red-900/20 dark:from-red-950 dark:via-red-900 dark:to-black dark:shadow-red-900/10">
-        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
-        <div class="relative flex flex-col gap-4 md:flex-row md:items-center">
-          <div class="flex shrink-0 items-center gap-3">
-            <div class="relative flex h-3 w-3 items-center justify-center">
-              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-              <span class="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
-            </div>
-            <span class="font-serif text-sm font-bold uppercase tracking-[0.25em] text-red-100">Son Dakika</span>
-            <div class="hidden h-5 w-px bg-red-700 md:block"></div>
-          </div>
-          
-          <div class="relative w-full overflow-hidden">
-            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm md:animate-marquee md:flex-nowrap md:whitespace-nowrap">
-              @for (item of breakingNews(); track item.title) {
-                <a [routerLink]="['/news', toSlug(item.title)]" class="group flex items-center gap-2 font-medium transition hover:text-red-200">
-                  <span class="line-clamp-1 group-hover:underline underline-offset-4 decoration-red-400/50">{{ item.title }}</span>
-                  <span class="text-red-700 dark:text-red-800/80 md:hidden">•</span>
-                </a>
-              }
-            </div>
-          </div>
-        </div>
+    <!-- Category & Search Bar -->
+    <div class="mx-auto max-w-7xl px-4 py-6 md:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-hide pb-2 md:pb-0 w-full md:w-auto">
+        @for (category of categories(); track category) {
+          <button
+            type="button"
+            (click)="selectCategory(category)"
+            class="font-ui text-[11px] uppercase tracking-widest transition-colors pb-1 border-b-[2px]"
+            [class]="
+              selectedCategory() === category
+                ? 'border-accent-main text-accent-main'
+                : 'border-transparent text-text-secondary hover:text-text-primary'
+            "
+          >
+            {{ category }}
+          </button>
+        }
       </div>
-    }
 
-    <div class="space-y-6 rounded-[2rem] border border-slate-200/60 bg-white/60 p-5 backdrop-blur-xl dark:border-white/5 dark:bg-slate-900/40 md:p-8 shadow-sm">
-      <div class="relative max-w-2xl mx-auto">
+      <div class="relative w-full md:w-64 shrink-0">
         <svg
-          class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+          class="absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary"
           viewBox="0 0 24 24"
           fill="none"
-          aria-hidden="true"
+          stroke="currentColor"
+          stroke-width="1.5"
         >
-          <path d="m21 21-4.35-4.35m1.85-5.15a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
         </svg>
         <input
           type="text"
           [value]="searchQuery()"
           (input)="updateSearchQuery($event)"
-          placeholder="Haber, yazar veya kategori ara..."
-          class="w-full rounded-2xl border-0 bg-slate-100/80 py-4 pl-12 pr-4 text-base font-medium text-slate-900 shadow-inner outline-none ring-1 ring-inset ring-slate-200/50 transition focus:bg-white focus:ring-2 focus:ring-inset focus:ring-indigo-500 dark:bg-slate-950/50 dark:text-slate-100 dark:ring-white/5 dark:focus:bg-slate-900"
+          placeholder="Ara..."
+          class="w-full bg-transparent border-b border-border py-2 pl-7 pr-3 font-ui text-[11px] uppercase tracking-wider text-text-primary outline-none transition-colors focus:border-accent-secondary focus:text-accent-main placeholder:text-text-secondary/50"
         />
-      </div>
-
-      <!-- Global Kategori Barı -->
-      <div class="relative w-full">
-        <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-2 scrollbar-hide justify-start md:justify-center">
-          @for (category of categories(); track category) {
-            <button
-              type="button"
-              (click)="selectCategory(category)"
-              class="shrink-0 rounded-xl px-6 py-2.5 text-sm font-semibold tracking-wide transition-all duration-300"
-              [class]="
-                selectedCategory() === category
-                  ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/20 dark:bg-slate-100 dark:text-slate-900 dark:shadow-white/10'
-                  : 'bg-transparent text-slate-600 hover:bg-slate-200/50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-white'
-              "
-            >
-              {{ category }}
-            </button>
-          }
-        </div>
       </div>
     </div>
 
+    <!-- Hero Section -->
     @if (heroNews()) {
-      <div class="grid gap-6 lg:grid-cols-[1fr_320px]">
-        <a
-          class="group relative isolate block overflow-hidden rounded-[2.5rem] bg-black shadow-2xl transition-transform duration-500 hover:-translate-y-1"
-          [routerLink]="['/news', toSlug(heroNews()!.title)]"
-          (click)="trackNewsOpen(heroNews()!, 'hero')"
-        >
-          <img
-            class="h-full min-h-[60vh] w-full object-cover opacity-80 transition duration-1000 group-hover:scale-105 group-hover:opacity-100"
-            [src]="heroNews()!.imageUrl"
-            [alt]="heroNews()!.title"
-            fetchpriority="high"
-            decoding="async"
-            (error)="onHeroImageError($event)"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-          
-          <div class="absolute inset-x-0 bottom-0 p-8 md:p-14">
-            <div class="flex items-center gap-3 mb-6">
-              <span class="inline-flex h-1.5 w-1.5 rounded-full bg-white/70"></span>
-              <span class="font-sans text-xs font-bold uppercase tracking-[0.2em] text-white/90">
-                Öne Çıkan
-              </span>
+      <div class="relative w-full h-[75vh] group overflow-hidden bg-bg-main" (click)="trackNewsOpen(heroNews()!, 'hero')">
+        <a [routerLink]="['/news', toSlug(heroNews()!.title)]" class="absolute inset-0 z-10"></a>
+        <img
+          class="absolute inset-0 w-full h-full object-cover transition-transform duration-[800ms] ease-out group-hover:scale-[1.02]"
+          [src]="heroNews()!.imageUrl"
+          [alt]="heroNews()!.title"
+          fetchpriority="high"
+          (error)="onHeroImageError($event)"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-bg-main via-bg-main/40 to-transparent"></div>
+        
+        <div class="absolute inset-0 flex items-end">
+          <div class="w-full mx-auto max-w-7xl px-4 pb-12 md:px-6 flex flex-col md:flex-row md:items-end justify-between gap-6 z-20">
+            <div class="max-w-3xl">
+              <div class="mb-4 font-ui text-[11px] uppercase tracking-widest text-accent-main">
+                {{ heroNews()!.categoryName }}
+              </div>
+              <h1 class="font-display text-[2.5rem] md:text-[3.25rem] leading-[1.1] font-bold text-text-primary mb-4 transition-colors group-hover:text-accent-main line-clamp-2 drop-shadow-md">
+                {{ heroNews()!.title }}
+              </h1>
+              <p class="font-body text-lg md:text-xl text-text-primary/90 mb-6 line-clamp-2">
+                {{ heroNews()!.spotText }}
+              </p>
+              <div class="font-ui text-[11px] uppercase tracking-wider text-text-secondary flex items-center gap-4">
+                <span class="text-text-primary">{{ heroNews()!.authorName }}</span>
+                <span>{{ heroNews()!.publishDate | date: 'dd MMM yyyy' }}</span>
+              </div>
             </div>
-
-            <h1 class="font-serif text-[clamp(2.5rem,6vw,4.5rem)] font-bold leading-[1.05] tracking-tight text-white drop-shadow-lg mb-6">
-              {{ heroNews()!.title }}
-            </h1>
-
-            <p class="max-w-2xl font-sans text-base leading-relaxed text-slate-200/90 md:text-lg mb-8">
-              {{ heroNews()!.spotText }}
-            </p>
-
-            <div class="flex items-center gap-6 font-sans text-sm font-medium text-slate-300">
-              <span class="flex items-center gap-2 text-white">
-                <span class="h-6 w-6 rounded-full bg-indigo-500 flex items-center justify-center text-xs text-white">{{ heroNews()!.authorName.charAt(0) }}</span>
-                {{ heroNews()!.authorName }}
-              </span>
-              <span class="h-1 w-1 rounded-full bg-white/30"></span>
-              <span>{{ heroNews()!.publishDate | date: 'dd MMM yyyy' }}</span>
-              <span class="h-1 w-1 rounded-full bg-white/30"></span>
-              <span class="text-indigo-300">{{ heroNews()!.categoryName }}</span>
+            
+            <div class="font-ui text-3xl font-light text-accent-main/70 shrink-0">
+              {{ (heroNews()!.viewCount / 1000).toFixed(1) }}K
             </div>
           </div>
-        </a>
-
-        <aside class="flex flex-col rounded-[2.5rem] bg-slate-900 p-8 shadow-xl dark:bg-slate-950">
-          <h3 class="mb-8 font-sans text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-            <span class="mr-2 text-indigo-400">/</span> En Çok Okunanlar
-          </h3>
-          <div class="flex-1 space-y-6">
-            @for (item of mostReadNews().slice(0, 5); track item.title) {
-              <a
-                class="group block border-b border-white/5 pb-6 last:border-0 last:pb-0 transition"
-                [routerLink]="['/news', toSlug(item.title)]"
-                (click)="trackNewsOpen(item, 'most_read')"
-              >
-                <div class="flex gap-4">
-                  <span class="font-serif text-3xl font-bold italic text-slate-800 transition group-hover:text-indigo-500 dark:text-slate-800/80">{{ $index + 1 }}</span>
-                  <div>
-                    <h4 class="font-serif text-lg font-medium leading-snug text-slate-100 transition group-hover:text-indigo-400">
-                      {{ item.title }}
-                    </h4>
-                    <div class="mt-3 font-sans text-xs font-medium text-slate-500">
-                      {{ item.categoryName }}
-                    </div>
-                  </div>
-                </div>
-              </a>
-            }
-          </div>
-        </aside>
+        </div>
       </div>
 
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        @for (item of gridNews(); track item.title + item.publishDate) {
-          <app-news-card [news]="item"></app-news-card>
-        }
+      <!-- Grid -->
+      <div class="mx-auto max-w-7xl px-4 py-12 md:px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          @for (item of gridNews(); track item.title + item.publishDate) {
+            <app-news-card [news]="item"></app-news-card>
+          }
+        </div>
       </div>
 
-      <!-- Pagination Controls -->
+      <!-- Load More -->
       @if (hasMore()) {
-        <div class="mt-10 flex justify-center">
+        <div class="mx-auto max-w-7xl px-4 md:px-6 pb-20 flex justify-center">
           <button
             type="button"
             (click)="loadMore()"
-            class="inline-flex items-center gap-2 rounded-xl border border-transparent bg-indigo-600 px-8 py-3 text-sm font-bold tracking-wide text-white shadow-lg shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-1 hover:bg-indigo-700 hover:shadow-indigo-500/40 active:translate-y-0 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+            class="group w-full max-w-md border-b border-border py-4 font-ui text-[11px] uppercase tracking-widest text-text-secondary transition-colors hover:border-accent-main hover:text-accent-main"
           >
-            Daha Fazla Yükle
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
+            Daha fazla yükle ↓
           </button>
         </div>
       }
     } @else {
-      <div
-        class="rounded-3xl border border-slate-200 bg-white/70 p-10 text-center text-slate-600 dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-300"
-      >
-        Aramana veya secili kategoriye uygun haber bulunamadi.
+      <div class="mx-auto max-w-7xl p-10 text-center font-ui text-sm text-text-secondary">
+        Aramana veya seçili kategoriye uygun haber bulunamadı.
       </div>
     }
   }

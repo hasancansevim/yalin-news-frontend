@@ -1,11 +1,17 @@
-<form class="space-y-4 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900" [formGroup]="form" (ngSubmit)="submit()">
+<form class="space-y-6 border border-border bg-surface p-6 md:p-8" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="border-b border-border pb-4 mb-6">
+    <h2 class="font-display text-xl font-bold text-text-primary">
+      {{ editItem ? 'Haberi Düzenle' : 'Yeni Haber Ekle' }}
+    </h2>
+  </div>
+
   @if (submitErrorLines().length) {
     <div
-      class="rounded-lg border border-rose-300 bg-rose-50 px-3 py-3 text-rose-800 dark:border-rose-500/40 dark:bg-rose-500/10 dark:text-rose-100"
+      class="border border-[#E05C5C]/40 bg-[#E05C5C]/10 px-4 py-3 text-[#E05C5C]"
       role="alert"
     >
-      <p class="text-sm font-semibold">Islem tamamlanamadi</p>
-      <ul class="mt-2 list-disc space-y-1.5 pl-5 text-sm">
+      <p class="font-ui text-[12px] font-bold uppercase tracking-widest">İşlem Tamamlanamadı</p>
+      <ul class="mt-3 list-disc space-y-1.5 pl-5 font-body text-[14px]">
         @for (line of submitErrorLines(); track $index) {
           <li>{{ line }}</li>
         }
@@ -13,81 +19,84 @@
     </div>
   }
 
-  <div class="grid gap-4 md:grid-cols-2">
-    <label class="space-y-1 text-sm">
-      <span class="font-medium">Baslik</span>
-      <input class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" formControlName="title" />
+  <div class="grid gap-6 md:grid-cols-2">
+    <label class="space-y-2">
+      <span class="font-ui text-[11px] uppercase tracking-widest text-text-secondary">Başlık</span>
+      <input class="w-full border-b border-border bg-transparent px-0 py-2 font-body text-[16px] text-text-primary outline-none transition-colors focus:border-accent-main" formControlName="title" />
     </label>
-    <label class="space-y-1 text-sm">
-      <span class="font-medium">Kategori</span>
-      <select class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" formControlName="categoryId">
+    
+    <label class="space-y-2">
+      <span class="font-ui text-[11px] uppercase tracking-widest text-text-secondary">Kategori</span>
+      <select class="w-full border-b border-border bg-transparent px-0 py-2 font-body text-[16px] text-text-primary outline-none transition-colors focus:border-accent-main" formControlName="categoryId">
         @if (isLookupsLoading()) {
-          <option [ngValue]="0">Kategoriler yukleniyor...</option>
+          <option class="bg-bg-main" [ngValue]="0">Kategoriler yükleniyor...</option>
         } @else {
-          <option [ngValue]="0">Kategori secin</option>
+          <option class="bg-bg-main" [ngValue]="0">Kategori seçin</option>
           @for (c of categoryOptions(); track c.id) {
-            <option [ngValue]="c.id">{{ c.name }}</option>
+            <option class="bg-bg-main" [ngValue]="c.id">{{ c.name }}</option>
           }
         }
       </select>
     </label>
-    <label class="space-y-1 text-sm">
-      <span class="font-medium">Yazar</span>
-      <select class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" formControlName="authorId">
+    
+    <label class="space-y-2">
+      <span class="font-ui text-[11px] uppercase tracking-widest text-text-secondary">Yazar</span>
+      <select class="w-full border-b border-border bg-transparent px-0 py-2 font-body text-[16px] text-text-primary outline-none transition-colors focus:border-accent-main" formControlName="authorId">
         @if (isLookupsLoading()) {
-          <option [ngValue]="0">Yazarlar yukleniyor...</option>
+          <option class="bg-bg-main" [ngValue]="0">Yazarlar yükleniyor...</option>
         } @else {
-          <option [ngValue]="0">Yazar secin</option>
+          <option class="bg-bg-main" [ngValue]="0">Yazar seçin</option>
           @for (a of authorOptions(); track a.id) {
-            <option [ngValue]="a.id">{{ a.name }}</option>
+            <option class="bg-bg-main" [ngValue]="a.id">{{ a.name }}</option>
           }
         }
       </select>
     </label>
-    <label class="space-y-1 text-sm">
-      <span class="font-medium">Durum</span>
-      <select class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" formControlName="status">
-        <option value="Draft">Draft</option>
-        <option value="Published">Published</option>
+    
+    <label class="space-y-2">
+      <span class="font-ui text-[11px] uppercase tracking-widest text-text-secondary">Durum</span>
+      <select class="w-full border-b border-border bg-transparent px-0 py-2 font-body text-[16px] text-text-primary outline-none transition-colors focus:border-accent-main" formControlName="status">
+        <option class="bg-bg-main" value="Draft">Taslak (Draft)</option>
+        <option class="bg-bg-main" value="Published">Yayında (Published)</option>
       </select>
     </label>
   </div>
 
-  <label class="space-y-1 text-sm">
-    <span class="font-medium">Gorsel URL</span>
-    <input class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" formControlName="imageUrl" />
+  <label class="space-y-2 block">
+    <span class="font-ui text-[11px] uppercase tracking-widest text-text-secondary">Görsel URL</span>
+    <input class="w-full border-b border-border bg-transparent px-0 py-2 font-body text-[16px] text-text-primary outline-none transition-colors focus:border-accent-main" formControlName="imageUrl" />
   </label>
 
-  <label class="space-y-1 text-sm">
-    <span class="font-medium">Spot Metin</span>
-    <textarea class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" rows="2" formControlName="spotText"></textarea>
+  <label class="space-y-2 block">
+    <span class="font-ui text-[11px] uppercase tracking-widest text-text-secondary">Spot Metin</span>
+    <textarea class="w-full border border-border bg-transparent px-4 py-3 font-body text-[16px] text-text-primary outline-none transition-colors focus:border-accent-main resize-y" rows="2" formControlName="spotText"></textarea>
   </label>
 
-  <label class="space-y-1 text-sm">
-    <span class="font-medium">Icerik</span>
-    <textarea class="w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-700 dark:bg-slate-950" rows="6" formControlName="content"></textarea>
+  <label class="space-y-2 block">
+    <span class="font-ui text-[11px] uppercase tracking-widest text-text-secondary">İçerik</span>
+    <textarea class="w-full border border-border bg-transparent px-4 py-3 font-body text-[16px] leading-[1.8] text-text-primary outline-none transition-colors focus:border-accent-main resize-y" rows="8" formControlName="content"></textarea>
   </label>
 
-  <div class="flex justify-end gap-2">
+  <div class="flex justify-end gap-4 pt-6 border-t border-border mt-8">
     <button
       type="button"
-      class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium transition hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
+      class="px-6 py-2 font-ui text-[11px] uppercase tracking-widest transition-colors border border-border text-text-secondary hover:border-text-primary hover:text-text-primary"
       (click)="cancel.emit()"
     >
-      Vazgec
+      Vazgeç
     </button>
     <button
       type="submit"
       [disabled]="
         isSaving() || isLookupsLoading() || !categoryOptions().length || !authorOptions().length
       "
+      [class.opacity-50]="
+        isSaving() || isLookupsLoading() || !categoryOptions().length || !authorOptions().length
+      "
       [class.cursor-not-allowed]="
         isSaving() || isLookupsLoading() || !categoryOptions().length || !authorOptions().length
       "
-      [class.opacity-70]="
-        isSaving() || isLookupsLoading() || !categoryOptions().length || !authorOptions().length
-      "
-      class="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
+      class="px-6 py-2 font-ui text-[11px] uppercase tracking-widest transition-colors border border-accent-main bg-accent-main text-bg-main hover:bg-transparent hover:text-accent-main"
     >
       {{ isSaving() ? 'Kaydediliyor...' : 'Kaydet' }}
     </button>

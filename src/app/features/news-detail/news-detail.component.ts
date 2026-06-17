@@ -5,9 +5,11 @@ import { PLATFORM_ID } from '@angular/core';
 
 import { NewsService } from '../../core/services/news.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
+import { SeoService } from '../../core/services/seo.service';
 import { FALLBACK_NEWS_IMAGE } from '../../shared/constants/media.constants';
 import { NewsDetailDto } from '../../shared/models/news-detail-dto';
 import { slugify } from '../../shared/utils/slug.util';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-news-detail',
@@ -19,6 +21,7 @@ export class NewsDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly newsService = inject(NewsService);
   private readonly analytics = inject(AnalyticsService);
+  private readonly seo = inject(SeoService);
   private readonly platformId = inject(PLATFORM_ID);
 
   protected readonly news = signal<NewsDetailDto | null>(null);
@@ -26,13 +29,11 @@ export class NewsDetailComponent implements OnInit {
   protected readonly error = signal<string>('');
 
   ngOnInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      this.isLoading.set(false);
-      return;
-    }
-
     const slugParam = (this.route.snapshot.paramMap.get('slug') ?? '').trim();
-    this.analytics.track('page_view', { page: 'news_detail', slug: slugParam });
+
+    if (isPlatformBrowser(this.platformId)) {
+      this.analytics.track('page_view', { page: 'news_detail', slug: slugParam });
+    }
 
     this.newsService.getNewsByDetails().subscribe({
       next: (response) => {
@@ -45,11 +46,22 @@ export class NewsDetailComponent implements OnInit {
         const records = response.data ?? [];
         const matched = records.find((item) => slugify(item.title) === slugParam) ?? records[0] ?? null;
         this.news.set(matched);
+
         if (matched) {
-          this.analytics.track('news_open', {
-            source: 'detail_page',
+          if (isPlatformBrowser(this.platformId)) {
+            this.analytics.track('news_open', {
+              source: 'detail_page',
+              title: matched.title,
+              category: matched.categoryName,
+            });
+          }
+
+          this.seo.updatePageMeta({
             title: matched.title,
-            category: matched.categoryName,
+            description: matched.spotText || matched.content.slice(0, 160),
+            image: matched.imageUrl || FALLBACK_NEWS_IMAGE,
+            url: `${environment.siteUrl}/news/${slugParam}`,
+            author: matched.authorName,
           });
         }
 

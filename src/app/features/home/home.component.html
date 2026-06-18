@@ -55,6 +55,27 @@
       </div>
     </div>
 
+    <!-- Breaking News Banner -->
+    @if (breakingNews().length > 0) {
+      <div class="mx-auto max-w-7xl px-4 md:px-6 mb-6">
+        <div class="flex items-center bg-[#E05C5C]/10 border border-[#E05C5C]/30 text-[#E05C5C] px-4 py-3 shadow-sm overflow-hidden">
+          <div class="font-ui text-[11px] uppercase tracking-widest font-bold whitespace-nowrap pr-4 border-r border-[#E05C5C]/30 flex items-center gap-2 z-10 bg-surface/5 backdrop-blur-md">
+            <div class="w-2 h-2 rounded-full bg-[#E05C5C] animate-pulse"></div>
+            SON DAKİKA
+          </div>
+          <div class="relative w-full flex items-center ml-4">
+            <div class="animate-marquee whitespace-nowrap flex gap-12">
+              @for (item of breakingNews(); track item.id) {
+                <a [routerLink]="['/news', toSlug(item.title)]" class="hover:underline font-body font-semibold">
+                  {{ item.title }}
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
     <!-- Hero Section -->
     @if (heroNews()) {
       <div class="relative w-full h-[75vh] group overflow-hidden bg-bg-main" (click)="trackNewsOpen(heroNews()!, 'hero')">
@@ -86,8 +107,11 @@
               </div>
             </div>
             
-            <div class="font-ui text-3xl font-light text-accent-main/70 shrink-0">
-              {{ (heroNews()!.viewCount / 1000).toFixed(1) }}K
+            <div class="font-ui text-xl font-light text-text-secondary flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {{ Math.max(1, Math.ceil((heroNews()!.content?.split(' ')?.length || 200) / 200)) }} dk
             </div>
           </div>
         </div>

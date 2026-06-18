@@ -18,6 +18,15 @@ module.exports = {
         ui: ['var(--font-ui)', 'monospace'],
         body: ['var(--font-body)', 'serif'],
       },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        }
+      },
+      animation: {
+        marquee: 'marquee 25s linear infinite',
+      }
     },
   },
   plugins: [],

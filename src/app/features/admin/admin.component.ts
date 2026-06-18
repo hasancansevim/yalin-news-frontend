@@ -26,7 +26,7 @@ export class AdminComponent {
 
   protected readonly list = signal<NewsDetailDto[]>([]);
   protected readonly activeEdit = signal<NewsDetailDto | null>(null);
-  protected readonly breakingTitles = this.breakingNewsService.titles;
+  protected readonly breakingTitles = computed(() => this.list().filter(n => n.title.startsWith('[SON DAKİKA] ')).map(n => n.title));
   protected readonly listError = signal('');
 
   protected readonly activeTab = signal<AdminTab>('haberler');
@@ -118,7 +118,24 @@ export class AdminComponent {
   }
 
   protected toggleBreaking(item: NewsDetailDto): void {
-    this.breakingNewsService.toggle(item.title);
-    this.notificationService.show(`"${item.title}" son dakika durumu değiştirildi.`, 'success');
+    const isBreaking = item.title.startsWith('[SON DAKİKA] ');
+    const updatedItem = { ...item };
+    
+    if (isBreaking) {
+      updatedItem.title = updatedItem.title.replace('[SON DAKİKA] ', '');
+    } else {
+      updatedItem.title = `[SON DAKİKA] ${updatedItem.title}`;
+    }
+    
+    this.newsService.updateNews(updatedItem).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.notificationService.show('Son dakika durumu güncellendi.', 'success');
+          this.loadNews();
+        } else {
+          this.notificationService.show('Son dakika güncellenemedi.', 'error');
+        }
+      }
+    });
   }
 }

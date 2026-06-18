@@ -23,11 +23,16 @@
         <span class="truncate max-w-[200px]">{{ news()!.title }}</span>
       </nav>
 
-      <!-- Header Info -->
       <header class="mb-10">
         <div class="flex items-center gap-4 mb-6 font-ui text-[11px] uppercase tracking-wider">
           <span class="text-accent-main font-medium">{{ news()!.categoryName }}</span>
           <span class="text-text-secondary">{{ news()!.publishDate | date: 'dd MMM yyyy' }}</span>
+          <span class="text-text-secondary flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ Math.max(1, Math.ceil((news()!.content?.split(' ')?.length || 200) / 200)) }} dk okuma
+          </span>
         </div>
 
         <h1 class="font-display text-[2.5rem] md:text-[42px] leading-[1.2] font-bold text-text-primary mb-6">

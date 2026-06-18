@@ -13,9 +13,9 @@
   --color-text-primary: #F0EDE8;
   --color-text-secondary: #8A8680;
 
-  --font-display: "Playfair Display", serif;
-  --font-ui: "DM Mono", monospace;
-  --font-body: "Source Serif 4", serif;
+  --font-display: "Merriweather", serif;
+  --font-ui: "Fira Code", monospace;
+  --font-body: "Inter", sans-serif;
 }
 
 [data-theme="light"] {

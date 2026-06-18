@@ -23,6 +23,8 @@ export class NewsDetailComponent implements OnInit {
   private readonly analytics = inject(AnalyticsService);
   private readonly seo = inject(SeoService);
   private readonly platformId = inject(PLATFORM_ID);
+  
+  protected readonly Math = Math;
 
   protected readonly news = signal<NewsDetailDto | null>(null);
   protected readonly isLoading = signal<boolean>(true);

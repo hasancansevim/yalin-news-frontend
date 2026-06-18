@@ -18,6 +18,8 @@ import { slugify } from '../../shared/utils/slug.util';
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
+  protected readonly Math = Math;
+
   private readonly newsService = inject(NewsService);
   private readonly analytics = inject(AnalyticsService);
   private readonly breakingNewsService = inject(BreakingNewsService);
@@ -39,38 +41,43 @@ export class HomeComponent implements OnInit {
     const category = this.selectedCategory();
     const query = this.searchQuery().trim().toLowerCase();
 
-    return this.news().filter((item) => {
-      const matchesCategory =
-        category === 'Tümü' ||
-        category === 'Tum Kategoriler' ||
-        item.categoryName.toLowerCase() === category.toLowerCase();
+    return this.news()
+      .map((item) => {
+        // Strip the [SON DAKİKA] tag for display
+        const isBreaking = item.title.startsWith('[SON DAKİKA] ');
+        return {
+          ...item,
+          title: isBreaking ? item.title.replace('[SON DAKİKA] ', '') : item.title,
+          isBreaking // add a custom flag if we want to use it
+        };
+      })
+      .filter((item) => {
+        const matchesCategory =
+          category === 'Tümü' ||
+          category === 'Tum Kategoriler' ||
+          item.categoryName.toLowerCase() === category.toLowerCase();
 
-      if (!matchesCategory) {
-        return false;
-      }
+        if (!matchesCategory) {
+          return false;
+        }
 
-      if (!query) {
-        return true;
-      }
+        if (!query) {
+          return true;
+        }
 
-      return (
-        item.title.toLowerCase().includes(query) ||
-        item.spotText.toLowerCase().includes(query) ||
-        item.authorName.toLowerCase().includes(query) ||
-        item.categoryName.toLowerCase().includes(query)
-      );
-    });
+        return (
+          item.title.toLowerCase().includes(query) ||
+          item.spotText.toLowerCase().includes(query) ||
+          item.authorName.toLowerCase().includes(query) ||
+          item.categoryName.toLowerCase().includes(query)
+        );
+      });
   });
 
   protected readonly heroNews = computed(() => this.filteredNews()[0] ?? null);
   protected readonly gridNews = computed(() => this.filteredNews().slice(1, this.displayLimit() + 1));
   protected readonly breakingNews = computed(() => {
-    const curated = this.breakingNewsService
-      .titles()
-      .map((title) => this.news().find((item) => item.title === title))
-      .filter((item): item is NewsDetailDto => !!item);
-
-    return curated;
+    return this.filteredNews().filter((item: any) => item.isBreaking);
   });
   protected readonly mostReadNews = computed(() =>
     [...this.news()].sort((a, b) => b.viewCount - a.viewCount).slice(0, 5),

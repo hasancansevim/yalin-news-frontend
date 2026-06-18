@@ -14,6 +14,7 @@ import { slugify } from '../../utils/slug.util';
 })
 export class NewsCardComponent {
   @Input({ required: true }) news!: NewsDetailDto;
+  protected readonly Math = Math;
 
   protected categoryTone(categoryName: string): string {
     const normalized = categoryName.toLowerCase();

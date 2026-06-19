@@ -42,9 +42,10 @@ export class LoginComponent {
         }
         this.router.navigateByUrl('/admin');
       },
-      error: () => {
+      error: (err) => {
         this.isSubmitting.set(false);
-        this.errorMessage.set('Giris basarisiz. Lutfen tekrar deneyin.');
+        const backendMessage = err.error && typeof err.error === 'string' ? err.error : (err.error?.message || 'Giriş başarısız. Lütfen tekrar deneyin.');
+        this.errorMessage.set(backendMessage);
       },
     });
   }

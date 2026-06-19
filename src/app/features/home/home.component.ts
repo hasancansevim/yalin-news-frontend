@@ -7,6 +7,7 @@ import { NewsService } from '../../core/services/news.service';
 import { AnalyticsService } from '../../core/services/analytics.service';
 import { BreakingNewsService } from '../../core/services/breaking-news.service';
 import { NewsCardComponent } from '../../shared/components/news-card/news-card.component';
+import { CurrencyWidgetComponent } from '../../shared/components/currency-widget/currency-widget.component';
 import { FALLBACK_NEWS_IMAGE } from '../../shared/constants/media.constants';
 import { NewsDetailDto } from '../../shared/models/news-detail-dto';
 import { slugify } from '../../shared/utils/slug.util';
@@ -14,7 +15,7 @@ import { slugify } from '../../shared/utils/slug.util';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterLink, NewsCardComponent],
+  imports: [CommonModule, DatePipe, RouterLink, NewsCardComponent, CurrencyWidgetComponent],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {

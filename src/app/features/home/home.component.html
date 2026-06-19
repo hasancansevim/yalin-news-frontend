@@ -15,6 +15,11 @@
       {{ error() }}
     </div>
   } @else {
+    <!-- Currency Widget (Between Navbar & Categories) -->
+    <div class="mx-auto max-w-7xl px-4 md:px-6 pt-4 pb-2 flex justify-end w-full">
+      <app-currency-widget></app-currency-widget>
+    </div>
+
     <!-- Category & Search Bar -->
     <div class="mx-auto max-w-7xl px-4 py-6 md:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
       <div class="flex items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-hide pb-2 md:pb-0 w-full md:w-auto">

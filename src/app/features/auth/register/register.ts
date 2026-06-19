@@ -41,9 +41,10 @@ export class RegisterComponent {
         this.isSubmitting.set(false);
         this.router.navigateByUrl('/login');
       },
-      error: () => {
+      error: (err) => {
         this.isSubmitting.set(false);
-        this.errorMessage.set('Kayıt başarısız. Lütfen tekrar deneyin.');
+        const backendMessage = err.error && typeof err.error === 'string' ? err.error : (err.error?.message || 'Kayıt başarısız. Lütfen tekrar deneyin.');
+        this.errorMessage.set(backendMessage);
       },
     });
   }

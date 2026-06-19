@@ -1,5 +1,6 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, PLATFORM_ID, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { BreakingNewsService } from '../../core/services/breaking-news.service';
 import { NewsService } from '../../core/services/news.service';

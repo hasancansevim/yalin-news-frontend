@@ -4,18 +4,27 @@ import { RouterLink } from '@angular/router';
 
 import { ThemeService } from '../../core/services/theme.service';
 
+import { AuthService } from '../../core/services/auth.service';
+import { CurrencyWidgetComponent } from '../../shared/components/currency-widget/currency-widget.component';
+
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, CurrencyWidgetComponent],
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {
   private readonly themeService = inject(ThemeService);
+  protected readonly authService = inject(AuthService);
 
   protected readonly isDark = computed(() => this.themeService.theme() === 'dark');
 
   protected toggleTheme(): void {
     this.themeService.toggleTheme();
+  }
+
+  protected logout(): void {
+    this.authService.logout();
+    // Optional: redirect to home or login page if desired
   }
 }

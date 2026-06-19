@@ -9,13 +9,22 @@ import { NewsFormComponent } from './components/news-form/news-form.component';
 import { NewsListComponent } from './components/news-list/news-list.component';
 import { CategoryManagementComponent } from './components/category-management/category-management.component';
 import { AuthorManagementComponent } from './components/author-management/author-management.component';
+import { AdminUserManagementComponent } from './components/admin-user-management/admin-user-management.component';
 
-type AdminTab = 'haberler' | 'kategoriler' | 'yazarlar' | 'istatistikler';
+type AdminTab = 'haberler' | 'kategoriler' | 'yazarlar' | 'kullanicilar' | 'istatistikler';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, NewsListComponent, NewsFormComponent, CategoryManagementComponent, AuthorManagementComponent],
+  imports: [
+    CommonModule, 
+    RouterLink, 
+    NewsListComponent, 
+    NewsFormComponent, 
+    CategoryManagementComponent, 
+    AuthorManagementComponent, 
+    AdminUserManagementComponent
+  ],
   templateUrl: './admin.component.html',
 })
 export class AdminComponent {

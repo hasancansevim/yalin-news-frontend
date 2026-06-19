@@ -12,13 +12,24 @@
           YALIN
         </span>
       </a>
+      <app-currency-widget></app-currency-widget>
     </div>
 
     <div class="flex items-center gap-4">
+      <!-- Auth Buttons -->
+      @if (authService.isLoggedIn()) {
+        <!-- Can be customized later to check if user is admin specifically -->
+        <a routerLink="/admin" class="hidden md:inline-flex px-3 py-1.5 rounded-lg border border-accent-main text-accent-main font-ui text-sm font-medium hover:bg-accent-main hover:text-white transition-colors">Admin Panel</a>
+        <button (click)="logout()" class="px-3 py-1.5 rounded-lg border border-border bg-surface text-text-primary font-ui text-sm font-medium hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-colors">Çıkış Yap</button>
+      } @else {
+        <a routerLink="/login" class="px-3 py-1.5 rounded-lg border border-border bg-surface text-text-primary font-ui text-sm font-medium hover:bg-bg-main transition-colors">Giriş Yap</a>
+        <a routerLink="/register" class="px-3 py-1.5 rounded-lg bg-accent-main text-white font-ui text-sm font-medium hover:bg-accent-secondary transition-colors shadow-sm shadow-accent-main/20">Kayıt Ol</a>
+      }
+
       <button
         type="button"
         (click)="toggleTheme()"
-        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-text-secondary transition-colors hover:text-accent-main"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-text-secondary transition-colors hover:text-accent-main ml-2"
         [attr.aria-label]="isDark() ? 'Aydınlık temaya geç' : 'Karanlık temaya geç'"
       >
         @if (isDark()) {

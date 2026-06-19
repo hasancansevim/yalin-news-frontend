@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-surface flex text-text-primary relative">
+<div class="min-h-screen bg-surface flex flex-col text-text-primary relative">
 
   <!-- Toast Notification Overlay -->
   @if (notificationService.notification()) {
@@ -15,69 +15,66 @@
     </div>
   }
   
-  <!-- Sidebar -->
-  <aside class="w-64 shrink-0 bg-bg-main border-r border-border sticky top-0 h-screen flex flex-col pt-8">
-    <div class="px-8 mb-12">
-      <span class="font-display text-xl font-black tracking-widest text-accent-main">YALIN ADMIN</span>
+  <!-- Top Navigation -->
+  <header class="bg-bg-main border-b border-border sticky top-0 z-40">
+    <div class="w-full px-6 flex items-center justify-between h-16">
+      <div class="flex items-center gap-6">
+        <span class="font-display text-xl font-black tracking-widest text-accent-main">YALIN ADMIN</span>
+        <nav class="hidden md:flex items-center gap-2">
+          <button 
+            type="button"
+            (click)="setTab('haberler')"
+            class="relative px-4 py-2 font-ui text-[11px] uppercase tracking-widest transition-colors rounded-lg"
+            [class]="activeTab() === 'haberler' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
+          >
+            Haberler
+          </button>
+
+          <button 
+            type="button"
+            (click)="setTab('kategoriler')"
+            class="relative px-4 py-2 font-ui text-[11px] uppercase tracking-widest transition-colors rounded-lg"
+            [class]="activeTab() === 'kategoriler' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
+          >
+            Kategoriler
+          </button>
+
+          <button 
+            type="button"
+            (click)="setTab('yazarlar')"
+            class="relative px-4 py-2 font-ui text-[11px] uppercase tracking-widest transition-colors rounded-lg"
+            [class]="activeTab() === 'yazarlar' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
+          >
+            Yazarlar
+          </button>
+
+          <button 
+            type="button"
+            (click)="setTab('kullanicilar')"
+            class="relative px-4 py-2 font-ui text-[11px] uppercase tracking-widest transition-colors rounded-lg"
+            [class]="activeTab() === 'kullanicilar' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
+          >
+            Kullanıcılar
+          </button>
+
+          <button 
+            type="button"
+            (click)="setTab('istatistikler')"
+            class="relative px-4 py-2 font-ui text-[11px] uppercase tracking-widest transition-colors rounded-lg"
+            [class]="activeTab() === 'istatistikler' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
+          >
+            İstatistikler
+          </button>
+        </nav>
+      </div>
+      <div>
+        <a routerLink="/" class="text-sm text-text-secondary hover:text-accent-main font-ui">Siteye Dön</a>
+      </div>
     </div>
-
-    <nav class="flex-1 flex flex-col gap-2">
-      <button 
-        type="button"
-        (click)="setTab('haberler')"
-        class="relative flex items-center gap-3 px-8 py-3 font-ui text-[11px] uppercase tracking-widest transition-colors w-full text-left"
-        [class]="activeTab() === 'haberler' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
-      >
-        @if (activeTab() === 'haberler') {
-          <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-accent-main"></div>
-        }
-        <svg class="h-4 w-4" [class.text-accent-main]="activeTab() === 'haberler'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
-        Haberler
-      </button>
-
-      <button 
-        type="button"
-        (click)="setTab('kategoriler')"
-        class="relative flex items-center gap-3 px-8 py-3 font-ui text-[11px] uppercase tracking-widest transition-colors w-full text-left"
-        [class]="activeTab() === 'kategoriler' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
-      >
-        @if (activeTab() === 'kategoriler') {
-          <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-accent-main"></div>
-        }
-        <svg class="h-4 w-4" [class.text-accent-main]="activeTab() === 'kategoriler'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
-        Kategoriler
-      </button>
-
-      <button 
-        type="button"
-        (click)="setTab('yazarlar')"
-        class="relative flex items-center gap-3 px-8 py-3 font-ui text-[11px] uppercase tracking-widest transition-colors w-full text-left"
-        [class]="activeTab() === 'yazarlar' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
-      >
-        @if (activeTab() === 'yazarlar') {
-          <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-accent-main"></div>
-        }
-        <svg class="h-4 w-4" [class.text-accent-main]="activeTab() === 'yazarlar'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-        Yazarlar
-      </button>
-
-      <button 
-        type="button"
-        (click)="setTab('istatistikler')"
-        class="relative flex items-center gap-3 px-8 py-3 font-ui text-[11px] uppercase tracking-widest transition-colors w-full text-left"
-        [class]="activeTab() === 'istatistikler' ? 'text-text-primary bg-surface/50' : 'text-text-secondary hover:text-text-primary hover:bg-surface/50'"
-      >
-        @if (activeTab() === 'istatistikler') {
-          <div class="absolute left-0 top-0 bottom-0 w-[2px] bg-accent-main"></div>
-        }
-        <svg class="h-4 w-4" [class.text-accent-main]="activeTab() === 'istatistikler'" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-        İstatistikler
-      </button>
-    </nav>
-  </aside>
+  </header>
 
   <!-- Main Content -->
-  <main class="flex-1 p-8 md:p-12 overflow-y-auto h-screen bg-bg-main">
+  <main class="flex-1 p-6 md:p-8 overflow-y-auto bg-bg-main w-full">
     
     @if (listError()) {
       <div class="mb-8 border border-border p-4 text-center font-ui text-sm text-[#E05C5C]">
@@ -130,6 +127,8 @@
         <app-admin-category-management></app-admin-category-management>
       } @else if (activeTab() === 'yazarlar') {
         <app-admin-author-management></app-admin-author-management>
+      } @else if (activeTab() === 'kullanicilar') {
+        <app-admin-user-management></app-admin-user-management>
       } @else if (activeTab() === 'istatistikler') {
         <div class="border border-border p-16 text-center">
           <h2 class="font-display text-2xl font-bold text-text-primary mb-2">Detaylı İstatistikler</h2>

@@ -42,7 +42,24 @@
           <span class="text-text-secondary">{{ item.viewCount }} okuma</span>
         </div>
 
-        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="h-8 w-8 flex items-center justify-center border transition-all"
+            [class.border-[#E05C5C]]="isBreaking(item)"
+            [class.bg-[#E05C5C]]="isBreaking(item)"
+            [class.text-bg-main]="isBreaking(item)"
+            [class.border-border]="!isBreaking(item)"
+            [class.text-text-secondary]="!isBreaking(item)"
+            [class.hover:border-[#E05C5C]]="!isBreaking(item)"
+            [class.hover:text-[#E05C5C]]="!isBreaking(item)"
+            (click)="toggleBreaking.emit(item)"
+            [title]="isBreaking(item) ? 'Son Dakikadan Çıkar' : 'Son Dakika Yap'"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </button>
+          
           <button
             type="button"
             class="h-8 px-4 font-ui text-[11px] uppercase tracking-widest transition-all border border-accent-main text-accent-main hover:bg-accent-main hover:text-bg-main"

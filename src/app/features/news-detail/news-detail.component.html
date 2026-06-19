@@ -43,6 +43,25 @@
           {{ news()!.spotText }}
         </p>
 
+        <!-- Interactions -->
+        <div class="flex items-center gap-4 mb-8">
+          <button 
+            (click)="toggleFavorite()"
+            class="flex items-center gap-2 px-4 py-2 rounded-full border border-border transition-colors"
+            [class.text-rose-500]="isFavorite()"
+            [class.border-rose-500]="isFavorite()"
+            [class.bg-rose-50]="isFavorite()"
+            [class.dark:bg-rose-900/20]="isFavorite()"
+            [class.text-text-secondary]="!isFavorite()"
+            [class.hover:text-rose-500]="!isFavorite()"
+            [class.hover:border-rose-500]="!isFavorite()">
+            <svg class="w-5 h-5" [attr.fill]="isFavorite() ? 'currentColor' : 'none'" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span class="font-ui text-sm font-medium">{{ isFavorite() ? 'Favorilerimde' : 'Favoriye Ekle' }}</span>
+          </button>
+        </div>
+
         <!-- Author -->
         <div class="flex items-center gap-4 py-6 border-y border-border">
           <div class="h-10 w-10 shrink-0 rounded-full bg-surface flex items-center justify-center font-ui text-lg text-accent-main border border-border">
@@ -88,6 +107,66 @@
           Bu içerik Yalin AI tarafından objektif gazetecilik ilkelerine bağlı kalınarak özetlenmiştir.
         </p>
       </div>
+
+      <!-- Comments Section -->
+      <div class="mt-16 pt-10 border-t border-border">
+        <h3 class="font-display text-2xl font-bold mb-8 text-text-primary">Yorumlar ({{ comments().length }})</h3>
+        
+        <!-- Add Comment -->
+        <div class="mb-10">
+          @if (authService.isLoggedIn()) {
+            <div class="flex gap-4">
+              <div class="flex-1">
+                <textarea 
+                  [(ngModel)]="newCommentText"
+                  rows="3" 
+                  class="w-full rounded-lg border border-border bg-surface px-4 py-3 text-text-primary focus:border-accent-main focus:ring-1 focus:ring-accent-main outline-none resize-none"
+                  placeholder="Habere yorum yap..."></textarea>
+                <div class="mt-2 flex justify-end">
+                  <button 
+                    (click)="submitComment()"
+                    [disabled]="!newCommentText().trim()"
+                    class="bg-accent-main text-white px-6 py-2 rounded-lg font-ui text-sm font-medium disabled:opacity-50 transition-colors hover:bg-accent-secondary">
+                    Yorum Gönder
+                  </button>
+                </div>
+              </div>
+            </div>
+          } @else {
+            <div class="p-6 bg-surface border border-border rounded-lg text-center">
+              <p class="text-text-secondary mb-4">Yorum yapmak ve tartışmaya katılmak için giriş yapmalısınız.</p>
+              <div class="flex justify-center gap-4">
+                <a routerLink="/login" class="bg-accent-main text-white px-6 py-2 rounded-lg font-ui text-sm font-medium hover:bg-accent-secondary transition-colors">Giriş Yap</a>
+                <a routerLink="/register" class="bg-surface border border-border text-text-primary px-6 py-2 rounded-lg font-ui text-sm font-medium hover:bg-bg-main transition-colors">Kayıt Ol</a>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Comments List -->
+        <div class="space-y-6">
+          @for (comment of comments(); track comment.id) {
+            <div class="p-5 border border-border rounded-xl bg-surface/50">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 rounded-full bg-accent-main/20 text-accent-main flex items-center justify-center font-ui font-bold">
+                  {{ comment.userId }}
+                </div>
+                <div>
+                  <div class="font-ui text-sm font-medium text-text-primary">Kullanıcı {{ comment.userId }}</div>
+                  <div class="font-ui text-xs text-text-secondary">{{ comment.createdAt | date:'dd MMM yyyy, HH:mm' }}</div>
+                </div>
+              </div>
+              <p class="text-text-primary font-body text-[15px] leading-relaxed">
+                {{ comment.content }}
+              </p>
+            </div>
+          }
+          @if (comments().length === 0) {
+            <p class="text-text-secondary text-center italic py-8">Henüz yorum yapılmamış. İlk yorumu sen yap!</p>
+          }
+        </div>
+      </div>
+
     </div>
   }
 </article>

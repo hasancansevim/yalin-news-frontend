@@ -37,6 +37,11 @@ export class AuthService {
     );
   }
 
+  register(data: any): Observable<any> {
+    const registerUrl = `${environment.apiBaseUrl}/api/Auth/register`;
+    return this.http.post<any>(registerUrl, data);
+  }
+
   logout(): void {
     if (typeof window === 'undefined') {
       return;
@@ -73,14 +78,23 @@ export class AuthService {
     return expiresAt * 1000 > Date.now();
   }
 
-  private decodeTokenPayload(token: string): { exp?: number } | null {
+  getCurrentUserId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+    const payload = this.decodeTokenPayload(token);
+    if (!payload) return null;
+    const userIdStr = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || payload.nameid || payload.sub;
+    return userIdStr ? parseInt(userIdStr, 10) : null;
+  }
+
+  private decodeTokenPayload(token: string): any | null {
     try {
       const parts = token.split('.');
       if (parts.length < 2) {
         return null;
       }
       const payload = JSON.parse(atob(parts[1]));
-      return payload as { exp?: number };
+      return payload;
     } catch {
       return null;
     }

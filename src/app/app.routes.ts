@@ -28,6 +28,11 @@ export const routes: Routes = [
       import('./features/auth/login/login.component').then((m) => m.LoginComponent),
   },
   {
+    path: 'register',
+    loadComponent: () =>
+      import('./features/auth/register/register').then((m) => m.RegisterComponent),
+  },
+  {
     path: '500',
     loadComponent: () =>
       import('./features/errors/server-error/server-error.component').then((m) => m.ServerErrorComponent),

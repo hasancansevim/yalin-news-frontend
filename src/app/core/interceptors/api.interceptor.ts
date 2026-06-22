@@ -11,10 +11,12 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
       ? globalThis.crypto.randomUUID()
       : Date.now().toString();
 
+  const isExternalApi = req.url.includes('exchangerate-api.com');
+
   const cloned = req.clone({
     setHeaders: {
       'X-Request-Id': requestId,
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(!isExternalApi && token ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
 

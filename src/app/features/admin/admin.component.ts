@@ -40,6 +40,36 @@ export class AdminComponent {
   protected readonly listError = signal('');
 
   protected readonly activeTab = signal<AdminTab>('haberler');
+  protected readonly activeNewsTab = signal<'all' | 'published' | 'draft'>('all');
+  protected readonly searchQuery = signal('');
+
+  protected readonly filteredNewsList = computed(() => {
+    let items = this.list();
+    const tab = this.activeNewsTab();
+    const query = this.searchQuery().toLowerCase();
+
+    if (tab === 'published') {
+      items = items.filter(i => {
+        const s = String(i.status).trim().toLowerCase();
+        return s === 'published' || s === '2';
+      });
+    } else if (tab === 'draft') {
+      items = items.filter(i => {
+        const s = String(i.status).trim().toLowerCase();
+        return s !== 'published' && s !== '2';
+      });
+    }
+
+    if (query) {
+      items = items.filter(i => 
+        i.title.toLowerCase().includes(query) || 
+        i.authorName.toLowerCase().includes(query) || 
+        i.categoryName.toLowerCase().includes(query)
+      );
+    }
+
+    return items;
+  });
 
   protected readonly statCards = computed(() => {
     const items = this.list();

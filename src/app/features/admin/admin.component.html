@@ -104,11 +104,56 @@
       @if (activeTab() === 'haberler') {
         <div class="space-y-12">
           <div class="border border-border p-8">
-            <div class="mb-8 flex items-center justify-between border-b border-border pb-4">
+            <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between border-b border-border pb-4 gap-4">
               <h2 class="font-display text-xl font-bold text-text-primary">İçerik Yönetimi</h2>
+              
+              <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                <!-- Tabs -->
+                <div class="flex items-center gap-2 border border-border p-1 bg-surface/30">
+                  <button 
+                    type="button"
+                    (click)="activeNewsTab.set('all')"
+                    class="px-4 py-1.5 font-ui text-[10px] uppercase tracking-widest transition-colors"
+                    [class]="activeNewsTab() === 'all' ? 'bg-border text-text-primary' : 'text-text-secondary hover:text-text-primary'"
+                  >
+                    Tümü
+                  </button>
+                  <button 
+                    type="button"
+                    (click)="activeNewsTab.set('published')"
+                    class="px-4 py-1.5 font-ui text-[10px] uppercase tracking-widest transition-colors"
+                    [class]="activeNewsTab() === 'published' ? 'bg-border text-[#4CAF82]' : 'text-text-secondary hover:text-[#4CAF82]'"
+                  >
+                    Yayında
+                  </button>
+                  <button 
+                    type="button"
+                    (click)="activeNewsTab.set('draft')"
+                    class="px-4 py-1.5 font-ui text-[10px] uppercase tracking-widest transition-colors"
+                    [class]="activeNewsTab() === 'draft' ? 'bg-border text-[#C8A96E]' : 'text-text-secondary hover:text-[#C8A96E]'"
+                  >
+                    Taslak
+                  </button>
+                </div>
+
+                <!-- Search -->
+                <div class="relative w-full sm:w-64">
+                  <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input 
+                    type="text" 
+                    [value]="searchQuery()"
+                    (input)="searchQuery.set($any($event.target).value)"
+                    placeholder="Haber, Yazar, Kategori Ara..."
+                    class="w-full bg-surface border border-border py-2 pl-9 pr-3 font-ui text-[11px] uppercase tracking-wider text-text-primary outline-none transition-colors focus:border-accent-secondary"
+                  />
+                </div>
+              </div>
             </div>
+            
             <app-admin-news-list
-              [newsList]="list()"
+              [newsList]="filteredNewsList()"
               [selectedTitle]="activeEdit()?.title ?? null"
               [breakingTitles]="breakingTitles()"
               (editNews)="startEdit($event)"

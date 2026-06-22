@@ -68,7 +68,7 @@
             <div class="w-2 h-2 rounded-full bg-[#E05C5C] animate-pulse"></div>
             SON DAKİKA
           </div>
-          <div class="relative w-full flex items-center ml-4">
+          <div class="relative w-full flex items-center ml-4 overflow-hidden">
             <div class="animate-marquee whitespace-nowrap flex gap-12">
               @for (item of breakingNews(); track item.id) {
                 <a [routerLink]="['/news', toSlug(item.title)]" class="hover:underline font-body font-semibold">

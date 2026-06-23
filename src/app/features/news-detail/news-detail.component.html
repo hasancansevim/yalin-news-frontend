@@ -152,10 +152,10 @@
             <div class="p-5 border border-border rounded-xl bg-surface/50">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-8 h-8 rounded-full bg-accent-main/20 text-accent-main flex items-center justify-center font-ui font-bold">
-                  {{ comment.userId }}
+                  {{ comment.userName ? (comment.userName | slice:0:1) : (comment.userId) }}
                 </div>
                 <div>
-                  <div class="font-ui text-sm font-medium text-text-primary">Kullanıcı {{ comment.userId }}</div>
+                  <div class="font-ui text-sm font-medium text-text-primary">{{ comment.userName || 'Kullanıcı ' + comment.userId }}</div>
                   <div class="font-ui text-xs text-text-secondary">{{ comment.createdAt | date:'dd MMM yyyy, HH:mm' }}</div>
                 </div>
               </div>

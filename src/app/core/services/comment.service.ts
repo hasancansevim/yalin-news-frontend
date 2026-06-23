@@ -7,6 +7,7 @@ export interface Comment {
   id?: number;
   newsId: number;
   userId: number;
+  userName?: string;
   content: string;
   createdAt?: string;
 }

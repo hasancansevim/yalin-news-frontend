@@ -24,6 +24,12 @@ export const routes: Routes = [
       import('./features/admin/admin.component').then((m) => m.AdminComponent),
   },
   {
+    path: 'favorites',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/favorites/favorites.component').then((m) => m.FavoritesComponent),
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import('./features/auth/login/login.component').then((m) => m.LoginComponent),

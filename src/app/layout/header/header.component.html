@@ -17,6 +17,7 @@
     <div class="flex items-center gap-4">
       <!-- Auth Buttons -->
       @if (authService.isLoggedIn()) {
+        <a routerLink="/favorites" class="hidden md:inline-flex px-3 py-1.5 rounded-lg text-text-primary font-ui text-sm font-medium hover:text-accent-main transition-colors">Favorilerim</a>
         @if (authService.isAdmin()) {
           <a routerLink="/admin" class="hidden md:inline-flex px-3 py-1.5 rounded-lg border border-accent-main text-accent-main font-ui text-sm font-medium hover:bg-accent-main hover:text-white transition-colors">Admin Panel</a>
         }

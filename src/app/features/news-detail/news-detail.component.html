@@ -80,11 +80,14 @@
 
     <!-- Image -->
     <div class="w-full max-w-[1000px] mx-auto px-4 mb-12">
-      <div class="w-full h-[480px] bg-surface relative">
+      <div class="w-full h-[480px] bg-surface relative" style="aspect-ratio: 16/9;">
         <img
           class="w-full h-full object-cover grayscale-[20%] transition duration-700 hover:grayscale-0"
-          [src]="news()!.imageUrl"
+          [src]="getOptimizedImageUrl(news()!.imageUrl)"
           [alt]="news()!.title"
+          width="1200"
+          height="675"
+          loading="eager"
           fetchpriority="high"
           (error)="onHeroImageError($event)"
         />

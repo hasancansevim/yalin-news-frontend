@@ -11,6 +11,7 @@ import { CurrencyWidgetComponent } from '../../shared/components/currency-widget
 import { FALLBACK_NEWS_IMAGE } from '../../shared/constants/media.constants';
 import { NewsDetailDto } from '../../shared/models/news-detail-dto';
 import { slugify } from '../../shared/utils/slug.util';
+import { SeoService } from '../../core/services/seo.service';
 
 @Component({
   selector: 'app-home',
@@ -27,6 +28,7 @@ export class HomeComponent implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly seo = inject(SeoService);
 
   protected readonly news = signal<NewsDetailDto[]>([]);
   protected readonly isLoading = signal<boolean>(true);
@@ -132,7 +134,21 @@ export class HomeComponent implements OnInit {
     target.src = FALLBACK_NEWS_IMAGE;
   }
 
+  getOptimizedImageUrl(url: string | undefined): string {
+    if (!url) return FALLBACK_NEWS_IMAGE;
+    if (url.includes('unsplash.com')) {
+      const separator = url.includes('?') ? '&' : '?';
+      return `${url}${separator}w=1920&q=75&fm=webp`;
+    }
+    return url;
+  }
+
   ngOnInit(): void {
+    this.seo.updatePageMeta({
+      title: 'Ana Sayfa',
+      description: 'En güncel dünya, teknoloji, ekonomi ve bilim haberlerini tarafsız ve sade bir şekilde sunan dijital haber platformu YalınNews.'
+    });
+
     if (!isPlatformBrowser(this.platformId)) {
       this.isLoading.set(false);
       return;

@@ -189,4 +189,13 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
     const target = event.target as HTMLImageElement;
     target.src = FALLBACK_NEWS_IMAGE;
   }
+
+  getOptimizedImageUrl(url: string | undefined): string {
+    if (!url) return FALLBACK_NEWS_IMAGE;
+    if (url.includes('unsplash.com')) {
+      const separator = url.includes('?') ? '&' : '?';
+      return `${url}${separator}w=1200&q=75&fm=webp`;
+    }
+    return url;
+  }
 }

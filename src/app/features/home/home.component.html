@@ -87,8 +87,11 @@
         <a [routerLink]="['/news', toSlug(heroNews()!.title)]" class="absolute inset-0 z-10"></a>
         <img
           class="absolute inset-0 w-full h-full object-cover transition-transform duration-[800ms] ease-out group-hover:scale-[1.02]"
-          [src]="heroNews()!.imageUrl"
+          [src]="getOptimizedImageUrl(heroNews()!.imageUrl)"
           [alt]="heroNews()!.title"
+          width="1920"
+          height="1080"
+          loading="eager"
           fetchpriority="high"
           (error)="onHeroImageError($event)"
         />

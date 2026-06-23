@@ -1,59 +1,94 @@
-# YalinnewsFrontend
+# YalınNews Frontend App 📰✨
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.7.
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
-## Development server
+YalınNews Frontend projesi, kullanıcıların haberlere saniyeler içinde erişebildiği, gereksiz içeriklerden arındırılmış, modern, hızlı ve şık bir SPA (Single Page Application) haber portalı arayüzüdür. **Angular 17+** kullanılarak geliştirilmiştir.
 
-To start a local development server, run:
+## 🚀 Öne Çıkan Özellikler
 
-```bash
-ng serve
+- **Modern ve Yalın Tasarım:** Tailwind CSS kullanılarak geliştirilmiş, gereksiz görsel gürültüden uzak, tamamen odaklanmaya yönelik minimalist ve şık bir UI.
+- **Karanlık Mod (Dark Mode) Desteği:** Sistem tercihine göre otomatik çalışan, göz yormayan karanlık mod entegrasyonu.
+- **Dinamik İçerik Tüketimi:** Yapay zeka destekli botumuzun çektiği vurucu ve akıcı haberleri en optimum okuma deneyimiyle sunar.
+- **Kullanıcı Etkileşimleri:**
+  - Haberleri "Favorilere" ekleme yeteneği
+  - Yorum yapabilme ve tartışmalara katılabilme
+  - Rol bazlı panel yönetimi (Yöneticiler için özel Admin Paneli)
+- **Responsive (Duyarlı) Tasarım:** Mobil, tablet ve masaüstü cihazlarla %100 uyumlu kusursuz okuma deneyimi.
+
+## 🛠️ Teknoloji Yığını
+
+- **Framework:** Angular 17+
+- **Dil:** TypeScript
+- **Stil Yönetimi:** Tailwind CSS (Modern, utility-first)
+- **İkonlar:** Heroicons, FontAwesome
+- **HTTP İstekleri:** Angular HttpClient (Interceptor'lar ile JWT güvenliği)
+- **Güvenlik:** Rota Koruması (Auth Guards), Güvenli Depolama
+
+## 📂 Proje Yapısı
+
+Projemiz, kodun sürdürülebilirliğini sağlamak adına "Feature-based" (Özellik odaklı) modüler bir mimariyle tasarlanmıştır:
+
+```text
+src/
+├── app/
+│   ├── core/           # Uygulamanın belkemiği (Guards, Interceptors, Modeller, Temel Servisler)
+│   ├── features/       # Bağımsız modüller (Admin, Auth, News, Profile, Favorites, Comments)
+│   ├── shared/         # Tekrar kullanılabilir yapılar (Navbar, Footer, Ortak Bileşenler)
+│   └── ...
+├── assets/             # Statik dosyalar, logolar ve global stil tanımları
+└── environments/       # Geliştirme (Local) ve Üretim (Prod) konfigürasyonları
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## ⚙️ Ortam Değişkenleri (Environments)
 
-## Code scaffolding
+Projeyi ayağa kaldırmadan önce, API bağlantısının doğru yapıldığından emin olun.
+`src/environments/environment.ts` (ve `.prod.ts`) dosyaları şu şekilde yapılandırılmalıdır:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:7001/api' // Backend API adresiniz
+};
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🚀 Kurulum & Geliştirme
 
+Projeyi yerel ortamınızda (local) çalıştırmak için aşağıdaki adımları izleyin:
+
+1. **Bağımlılıkları Yükleyin:**
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
-
-To build the project run:
-
+2. **Geliştirme Sunucusunu Başlatın:**
 ```bash
-ng build
+npm start
 ```
+(Ya da `ng serve` kullanabilirsiniz). Sunucu ayağa kalktıktan sonra tarayıcınızda `http://localhost:4200` adresine gidin.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
+3. **Üretim (Production) İçin Derleme:**
 ```bash
-ng test
+npm run build
 ```
+Bu komut projeyi optimize ederek `dist/` klasörüne çıkarır.
 
-## Running end-to-end tests
+## ☁️ Dağıtım (Deployment)
 
-For end-to-end (e2e) testing, run:
+Proje, Vercel, Netlify veya Render gibi platformlara doğrudan deploy edilebilir.
 
-```bash
-ng e2e
-```
+**Vercel İçin:**
+Yalnızca GitHub reponuzu bağlamanız yeterlidir. Vercel, Angular projesi olduğunu algılayacak ve `ng build` komutunu otomatik olarak koşacaktır.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 🤝 Katkıda Bulunma
 
-## Additional Resources
+1. Projeyi **Fork** edin.
+2. Yeni bir dal (branch) açın: `git checkout -b feature/harika-ozellik`
+3. Değişikliklerinizi yapıp commit'leyin: `git commit -m 'feat: Harika bir özellik eklendi'`
+4. Branch'inize push yapın: `git push origin feature/harika-ozellik`
+5. GitHub üzerinden bir **Pull Request (PR)** açın.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+*© 2026 YalinNews Projesi.*

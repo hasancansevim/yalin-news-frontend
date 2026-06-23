@@ -87,6 +87,21 @@ export class AuthService {
     return userIdStr ? parseInt(userIdStr, 10) : null;
   }
 
+  isAdmin(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+    const payload = this.decodeTokenPayload(token);
+    if (!payload) return false;
+
+    const roleClaim = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || payload.role || payload.roles;
+    if (!roleClaim) return false;
+
+    if (Array.isArray(roleClaim)) {
+      return roleClaim.some(r => r === 'Admin' || r === 'admin');
+    }
+    return roleClaim === 'Admin' || roleClaim === 'admin';
+  }
+
   private decodeTokenPayload(token: string): any | null {
     try {
       const parts = token.split('.');

@@ -40,7 +40,11 @@ export class LoginComponent {
           this.errorMessage.set('Giris basarisiz. Lutfen bilgileri kontrol edin.');
           return;
         }
-        this.router.navigateByUrl('/admin');
+        if (this.authService.isAdmin()) {
+          this.router.navigateByUrl('/admin');
+        } else {
+          this.router.navigateByUrl('/');
+        }
       },
       error: (err) => {
         this.isSubmitting.set(false);

@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 
 export interface SeoTags {
   title: string;
@@ -15,6 +16,9 @@ export interface SeoTags {
 export class SeoService {
   private readonly title = inject(Title);
   private readonly meta = inject(Meta);
+  private readonly document = inject(DOCUMENT);
+
+  private schemaScriptElement: HTMLScriptElement | null = null;
 
   private readonly siteName = 'YalınNews';
   private readonly defaultDescription = 'Güncel haberler ve son dakika gelişmeleri.';
@@ -57,6 +61,59 @@ export class SeoService {
 
     if (tags.author) {
       this.meta.updateTag({ name: 'twitter:creator', content: tags.author });
+    }
+  }
+
+  setCanonicalUrl(url: string) {
+    const head = this.document.getElementsByTagName('head')[0];
+    let element: HTMLLinkElement | null = this.document.querySelector(`link[rel='canonical']`);
+    if (!element) {
+      element = this.document.createElement('link') as HTMLLinkElement;
+      element.setAttribute('rel', 'canonical');
+      head.appendChild(element);
+    }
+    element.setAttribute('href', url);
+  }
+
+  setNewsArticleSchema(news: any, slug: string) {
+    this.removeNewsArticleSchema();
+
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "NewsArticle",
+      "headline": news.title,
+      "description": news.spotText || news.content?.slice(0, 160),
+      "image": news.imageUrl ? [news.imageUrl] : [],
+      "datePublished": news.publishDate || news.publishedAt || new Date().toISOString(),
+      "author": [{
+        "@type": "Person",
+        "name": news.authorName || (news.author ? news.author.name : 'YalınNews')
+      }],
+      "publisher": {
+        "@type": "Organization",
+        "name": this.siteName,
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://yalinnews.vercel.app/favicon.ico"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://yalinnews.vercel.app/news/${slug}`
+      }
+    };
+
+    const script = this.document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schema);
+    this.schemaScriptElement = script;
+    this.document.head.appendChild(script);
+  }
+
+  removeNewsArticleSchema() {
+    if (this.schemaScriptElement && this.document.head.contains(this.schemaScriptElement)) {
+      this.document.head.removeChild(this.schemaScriptElement);
+      this.schemaScriptElement = null;
     }
   }
 }

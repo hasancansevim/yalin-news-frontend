@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /panel/
+Disallow: /auth/
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://yalinnews.vercel.app/sitemap.xml

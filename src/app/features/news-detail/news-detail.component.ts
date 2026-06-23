@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +22,7 @@ import { environment } from '../../../environments/environment';
   imports: [CommonModule, DatePipe, RouterLink, FormsModule],
   templateUrl: './news-detail.component.html',
 })
-export class NewsDetailComponent implements OnInit {
+export class NewsDetailComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly newsService = inject(NewsService);
   private readonly analytics = inject(AnalyticsService);
@@ -80,6 +80,9 @@ export class NewsDetailComponent implements OnInit {
             author: matched.authorName,
           });
 
+          this.seo.setCanonicalUrl(`https://yalinnews.vercel.app/news/${slugParam}`);
+          this.seo.setNewsArticleSchema(matched, slugParam);
+
           this.loadComments(matched.id!);
           this.checkFavoriteStatus(matched.id!);
         }
@@ -95,6 +98,10 @@ export class NewsDetailComponent implements OnInit {
         this.isLoading.set(false);
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.seo.removeNewsArticleSchema();
   }
 
   private loadComments(newsId: number) {

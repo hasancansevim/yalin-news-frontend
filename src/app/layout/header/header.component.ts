@@ -5,12 +5,12 @@ import { RouterLink } from '@angular/router';
 import { ThemeService } from '../../core/services/theme.service';
 
 import { AuthService } from '../../core/services/auth.service';
-import { CurrencyWidgetComponent } from '../../shared/components/currency-widget/currency-widget.component';
+
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, CurrencyWidgetComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {

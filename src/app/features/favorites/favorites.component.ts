@@ -23,18 +23,18 @@ export class FavoritesComponent implements OnInit {
   isLoading = signal(true);
 
   ngOnInit() {
-    this.seoService.updateTitle('Favorilerim');
+    this.seoService.updatePageMeta({ title: 'Favorilerim', description: 'Favori haberlerim.' });
     this.loadFavorites();
   }
 
   private loadFavorites() {
-    const user = this.authService.getCurrentUser();
-    if (!user) {
+    const userId = this.authService.getCurrentUserId();
+    if (!userId) {
       this.isLoading.set(false);
       return;
     }
 
-    this.favoriteService.getAllByUserId(user.id).subscribe({
+    this.favoriteService.getAllByUserId(userId).subscribe({
       next: (res) => {
         if (res.success) {
           this.favoriteNews.set(res.data);

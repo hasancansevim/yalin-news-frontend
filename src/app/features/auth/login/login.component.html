@@ -14,7 +14,10 @@
     </label>
 
     <label class="block space-y-1 text-sm">
-      <span class="font-medium text-slate-700 dark:text-slate-200">Sifre</span>
+      <div class="flex items-center justify-between">
+        <span class="font-medium text-slate-700 dark:text-slate-200">Sifre</span>
+        <a routerLink="/forgot-password" class="text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Şifremi Unuttum</a>
+      </div>
       <input
         type="password"
         formControlName="password"

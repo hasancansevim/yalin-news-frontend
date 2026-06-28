@@ -45,7 +45,15 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
   private favoriteId: number | null = null;
 
   ngOnInit(): void {
-    const slugParam = (this.route.snapshot.paramMap.get('slug') ?? '').trim();
+    this.route.paramMap.subscribe(params => {
+      const slugParam = (params.get('slug') ?? '').trim();
+      this.loadNewsDetail(slugParam);
+    });
+  }
+
+  private loadNewsDetail(slugParam: string): void {
+    this.isLoading.set(true);
+    this.error.set('');
 
     if (isPlatformBrowser(this.platformId)) {
       this.analytics.track('page_view', { page: 'news_detail', slug: slugParam });
@@ -60,7 +68,11 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
         }
 
         const records = response.data ?? [];
-        const matched = records.find((item) => slugify(item.title) === slugParam) ?? records[0] ?? null;
+        const matched = records.find((item) => {
+          const strippedTitle = item.title.startsWith('[SON DAKİKA] ') ? item.title.replace('[SON DAKİKA] ', '') : item.title;
+          return slugify(strippedTitle) === slugParam;
+        }) ?? records[0] ?? null;
+        
         this.news.set(matched);
 
         if (matched) {

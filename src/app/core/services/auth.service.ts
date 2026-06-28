@@ -42,6 +42,16 @@ export class AuthService {
     return this.http.post<any>(registerUrl, data);
   }
 
+  forgotPassword(email: string): Observable<any> {
+    const url = `${environment.apiBaseUrl}/api/Auth/forgot-password`;
+    return this.http.post<any>(url, { email });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    const url = `${environment.apiBaseUrl}/api/Auth/reset-password`;
+    return this.http.post<any>(url, { token, newPassword });
+  }
+
   logout(): void {
     if (typeof window === 'undefined') {
       return;

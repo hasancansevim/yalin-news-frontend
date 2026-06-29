@@ -59,7 +59,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
       this.analytics.track('page_view', { page: 'news_detail', slug: slugParam });
     }
 
-    this.newsService.getNewsByDetails().subscribe({
+    this.newsService.getAllNews().subscribe({
       next: (response) => {
         if (!response.success) {
           this.error.set(response.message || 'Haber detay bilgisi alinamadi.');
